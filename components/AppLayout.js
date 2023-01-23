@@ -1,8 +1,12 @@
+import { useState } from 'react';
 import Link from "next/link";
 import PropTypes from "prop-types";
 
+import LoginForm from './LoginForm';
+
 import { styled, alpha } from "@mui/material/styles";
 import {
+  Grid,
   AppBar,
   Box,
   Toolbar,
@@ -14,11 +18,12 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const AppLayout = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const menuId = "primary-search-account-menu";
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="default">
+      <AppBar position="static">
         <Toolbar>
           <Link href="/">
             <Typography
@@ -41,18 +46,6 @@ const AppLayout = ({ children }) => {
           </Search>
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "flex" } }} />
           <Box sx={{ display: { xs: "flex", md: "flex" } }}>
-            <Link href="/signup">
-              <Typography
-                variant="body1"
-                noWrap
-                component="div"
-                sx={{ display: { xs: "block", sm: "block" } }}
-              >
-               <a style={{ cursor: "pointer" }}>Sign Up</a>
-              </Typography>
-            </Link>
-          </Box>
-          <Box sx={{ display: { xs: "flex", md: "flex" } }}>
             <Link href="/profile">
               <IconButton
                 size="large"
@@ -70,7 +63,17 @@ const AppLayout = ({ children }) => {
           </Box>
         </Toolbar>
       </AppBar>
-      {children}
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={3}>
+          {!isLoggedIn && <LoginForm />}
+        </Grid>
+        <Grid item xs={12} md={6}>
+          {children}
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <a href="https://shinyoung-portfolio.web.app/" target="_blank" rel="noreferrer noopener">Made by Austyn</a>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
