@@ -1,7 +1,7 @@
 import Head from "next/head";
 import AppLayout from '../components/AppLayout';
 
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Link from 'next/link';
 import {
   Box,
@@ -14,7 +14,8 @@ import {
   ButtonGroup,
   Button,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  Alert
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -24,9 +25,13 @@ const Signup = () => {
     email: "",
     username: "",
     pass: "",
-    passConfirm: ""
+    passCheck: "",
+    term: false
   });
-  const { email, username, pass, passConfirm } = form;
+  const [passError, setPassError] = useState(false);
+  const [termError, setTermError] = useState(false);
+
+  const { email, username, pass, passCheck, term } = form;
 
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -34,19 +39,49 @@ const Signup = () => {
     event.preventDefault();
   };
 
+  useEffect(()=>{
+    console.log(form);
+    if (pass !== passCheck){  
+      setPassError(true);
+    }
+    if (pass == passCheck){  
+      setPassError(false);
+    }
+  }, [form])
+
   const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    // const { name, value } = e.target; // 비구조화 할당 한 name와 value는 read-only라서 name 또는 value의 값을 바꿀 수 없다. 
+
+    if (e.target.checked){
+      e.target.value = true;
+    }
+
+    setForm((prev) => ({ ...prev, [e.target?.name]: e.target?.value }));
   }, [form]);
 
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
+    if (pass !== passCheck){  
+      console.log("before fake req");
+      return setPassError(true);
+    }
+
+    if (!term){
+      console.log("before fake req");
+      return setTermError(true);
+    }
+
+    // send req first,
+    console.log("fake req");
+    console.log(email, username, pass);
+    // and then initialize
     setForm({ 
       email: "",
       username: "",
       pass: "",
-      passConfirm: ""
+      passCheck: "",
+      term: false
     })
   }, [form]);
 
@@ -95,6 +130,7 @@ const Signup = () => {
               name="pass"
               value={pass}
               onChange={handleChange}
+              required
               id="Password"
               endAdornment={
                 <InputAdornment position="end">
@@ -112,15 +148,16 @@ const Signup = () => {
             />
           </FormControl>
           <FormControl sx={{ m: 1, width: "100%" }} variant="outlined" style={{ marginTop: "4px" }}>
-            <InputLabel htmlFor="Password-Confirm">
-              Password Confirm
+            <InputLabel htmlFor="Password-Check">
+              Password Check
             </InputLabel>
             <OutlinedInput
               type={showPassword ? "text" : "password"}
-              name="passConfirm"
-              value={passConfirm}
+              name="passCheck"
+              value={passCheck}
               onChange={handleChange}
-              id="Password-Confirm"
+              required
+              id="Password-Check"
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
@@ -133,11 +170,13 @@ const Signup = () => {
                   </IconButton>
                 </InputAdornment>
               }
-              label="Password-Confirm"
+              label="Password-Check"
             />
           </FormControl>
+          {passError && <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>}
           <Box sx={{ margin: '0 8px' }}>
-            <FormControlLabel sx={{ display: 'block' }} control={<Checkbox required />} label="제로초 말을 잘 들을 것을 동의합니다." />
+            <FormControlLabel sx={{ display: 'block' }} control={<Checkbox name="term" value={term} onChange={handleChange} />} label="제로초 말을 잘 들을 것을 동의합니다." />
+            {termError && <Alert severity="error">This is an error alert — check it out!</Alert>}
             <Button sx={{ display: 'block' }} type="submit" variant="contained">Register</Button>
           </Box>
           </form>
