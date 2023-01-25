@@ -3,6 +3,7 @@ import Link from "next/link";
 import PropTypes from "prop-types";
 
 import LoginForm from './LoginForm';
+import UserProfile from './UserProfile';
 
 import { styled, alpha } from "@mui/material/styles";
 import {
@@ -65,7 +66,7 @@ const AppLayout = ({ children }) => {
       </AppBar>
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>
-          {!isLoggedIn && <LoginForm />}
+          {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn} /> : <LoginForm setIsLoggedIn={setIsLoggedIn} />}
         </Grid>
         <Grid item xs={12} md={6}>
           {children}

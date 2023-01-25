@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import Link from 'next/link';
 import {
-  
   Box,
   IconButton,
   OutlinedInput,
@@ -14,21 +13,33 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const LoginForm = () => {
-  const [form, setForm] = useState([]);
+const LoginForm = ({ setIsLoggedIn }) => {
+  const [form, setForm] = useState({
+    email: "",
+    pass:""
+  });
+  const { email, pass } = form;
+
   const [showPassword, setShowPassword] = useState(false);
-
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setForm((){ [name]: value })
-  }
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }, [form]);
+
+
+  const handleSubmit = useCallback((e) => {
+    e.preventDefault();
+    setForm({ 
+      email: "",
+      pass:""
+    })
+    setIsLoggedIn(true);
+  }, [form]);
 
   return (
     <Box sx={{ display: "flex", flexWrap: "wrap" }}>
@@ -40,6 +51,8 @@ const LoginForm = () => {
           <OutlinedInput
             type="email"
             name="email"
+            value={email}
+            onChange={handleChange}
             id="Email"
             label="Email"
           />
@@ -52,6 +65,8 @@ const LoginForm = () => {
           <OutlinedInput
             type={showPassword ? "text" : "password"}
             name="pass"
+            value={pass}
+            onChange={handleChange}
             id="Password"
             endAdornment={
               <InputAdornment position="end">
