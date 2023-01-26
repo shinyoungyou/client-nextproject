@@ -1,4 +1,7 @@
 import { useState, useCallback } from "react";
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { loginAction } from '../reducers';
 import Link from 'next/link';
 import {
   Box,
@@ -13,7 +16,8 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
-const LoginForm = ({ setIsLoggedIn }) => {
+const LoginForm = () => {
+  const dispatch = useDispatch();
   const [form, setForm] = useState({
     email: "",
     pass:""
@@ -38,7 +42,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
       email: "",
       pass:""
     })
-    setIsLoggedIn(true);
+    dispatch(loginAction(form));
   }, [form]);
 
   return (

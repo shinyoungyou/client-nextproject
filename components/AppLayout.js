@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import Link from "next/link";
 import PropTypes from "prop-types";
+import { useSelector } from 'react-redux';
 
 import LoginForm from './LoginForm';
 import UserProfile from './UserProfile';
@@ -19,7 +19,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 
 const AppLayout = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn } = useSelector((state)=>state.user);
   const menuId = "primary-search-account-menu";
 
   return (
@@ -66,7 +66,7 @@ const AppLayout = ({ children }) => {
       </AppBar>
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>
-          {isLoggedIn ? <UserProfile setIsLoggedIn={setIsLoggedIn} /> : <LoginForm setIsLoggedIn={setIsLoggedIn} />}
+          {isLoggedIn ? <UserProfile /> : <LoginForm />}
         </Grid>
         <Grid item xs={12} md={6}>
           {children}

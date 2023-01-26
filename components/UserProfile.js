@@ -1,14 +1,21 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import { useDispatch } from 'react-redux';
+import { logoutAction } from '../reducers';
 
-import { Avatar, Box, Button, BottomNavigation, BottomNavigationAction, Card, CardHeader, CardContent,CardActions } from '@mui/material';
+import { Avatar, Box, Button, BottomNavigation, BottomNavigationAction, Card, CardHeader, CardContent, CardActions } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
-const UserProfile = ({ setIsLoggedIn }) => {
+const UserProfile = () => {
+  const dispatch = useDispatch();
+
   const [value, setValue] = useState(0);
+  const handleLogout = () =>{
+    dispatch(logoutAction);
+  }
 
   return (
     <Card sx={{ maxWidth: 345, margin: '8px 0' }}>
@@ -19,7 +26,7 @@ const UserProfile = ({ setIsLoggedIn }) => {
           </Avatar>
         }
         action={
-          <Button onClick={()=>setIsLoggedIn(false)} variant="outlined" style={{ margin: '4px 8px' }}>Log Out</Button>
+          <Button onClick={handleLogout} variant="outlined" style={{ margin: '4px 8px' }}>Log Out</Button>
         }
         title="Shrimp Chorizo"
       />
