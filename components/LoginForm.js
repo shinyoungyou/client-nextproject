@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { loginAction } from '../reducers';
+import { loginAction } from '../reducers/user';
 import Link from 'next/link';
 import {
   Box,

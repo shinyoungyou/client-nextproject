@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useDispatch } from 'react-redux';
-import { logoutAction } from '../reducers';
+import { logoutAction } from '../reducers/user';
 
 import { Avatar, Box, Button, BottomNavigation, BottomNavigationAction, Card, CardHeader, CardContent, CardActions } from '@mui/material';
 import { blue } from '@mui/material/colors';
