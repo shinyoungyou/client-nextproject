@@ -17,13 +17,14 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
+import '@fontsource/public-sans';
 
 const AppLayout = ({ children }) => {
   const { isLoggedIn } = useSelector((state)=>state.user);
   const menuId = "primary-search-account-menu";
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ flexGrow: 1, fontFamily: 'Public Sans' }}>
       <AppBar position="static">
         <Toolbar>
           <Link href="/">
