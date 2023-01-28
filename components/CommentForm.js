@@ -5,6 +5,7 @@ import { Button, Input } from "@mui/material";
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import Tooltip from '@mui/material/Tooltip';
 
 const CommentForm = () => {
   const [text, setText] = useState('');
@@ -26,17 +27,23 @@ const CommentForm = () => {
               startDecorator={
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center'}}>
                   <Box sx={{ display: 'flex', gap: 0.5 }}>
+                    <Tooltip title="Good" placement="top">
                     <IconButton variant="outlined" sx={{ borderColor: '#D8D8DF' }} color="neutral" onClick={addEmoji('👍')}>
                       👍
                     </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Summer" placement="top">
                     <IconButton variant="outlined" sx={{ borderColor: '#D8D8DF' }} color="neutral" onClick={addEmoji('🏖')}>
                       🏖
                     </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Love" placement="top">
                     <IconButton variant="outlined" sx={{ borderColor: '#D8D8DF' }} color="neutral" onClick={addEmoji('😍')}>
                       😍
                     </IconButton>
+                    </Tooltip>
                   </Box>
-                  <Typography level="body3" sx={{ ml: 'auto', color: '#73738c' }}>
+                  <Typography level="body3" sx={{ ml: 'auto', color: '#73738c', fontSize: '14px' }}>
                     {text.length} letter(s)
                   </Typography>
                 </Box>
