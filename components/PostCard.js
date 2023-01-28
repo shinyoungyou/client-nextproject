@@ -10,7 +10,7 @@ import Collapse from '@mui/material/Collapse';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import { red } from '@mui/material/colors';
+import { red, blue } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -26,6 +26,20 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import ListSubheader from '@mui/material/ListSubheader';
 
+import { alpha } from '@mui/material/styles';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import EditIcon from '@mui/icons-material/Edit';
+import ArchiveIcon from '@mui/icons-material/Archive';
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import DeleteIcon from '@mui/icons-material/Delete';
+import FlagIcon from '@mui/icons-material/Flag';
+import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
+import ListItemDecorator from '@mui/joy/ListItemDecorator';
+import Tooltip from '@mui/material/Tooltip';
+import { Box } from '@mui/joy';
+
 const PostCard = () => {
   const [expanded, setExpanded] = useState(false);
 
@@ -33,18 +47,81 @@ const PostCard = () => {
     setExpanded(!expanded);
   };
 
+  const [tweetAnchorEl, setTweetAnchorEl] = React.useState(null);
+  const [replyAnchorEl, setReplyAnchorEl] = React.useState(null);
+
+  const twwetOpen = Boolean(tweetAnchorEl);
+  const replyOpen = Boolean(replyAnchorEl);
+
+  const handleTweetClick = (event) => {
+    setTweetAnchorEl(event.currentTarget);
+  };
+
+  const handleTweetClose = () => {
+    setTweetAnchorEl(null);
+  };
+
+  const handleReplyClick = (event) => {
+    setReplyAnchorEl(event.currentTarget);
+  };
+
+
+  const handleReplyClose = () => {
+    setReplyAnchorEl(null);
+  };
+
   return (
       <Card sx={{ m: 1 }}>
         <CardHeader
             avatar={
-              <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+              <Avatar sx={{ bgcolor: blue[500] }} aria-label="recipe">
                 R
               </Avatar>
             }
             action={
-              <IconButton aria-label="settings">
-                <MoreVertIcon />
-              </IconButton>
+              <>
+                <Tooltip title="More">
+                <IconButton
+                    aria-label="more"
+                    id="long-button"
+                    aria-controls={twwetOpen ? 'long-menu' : undefined}
+                    aria-expanded={twwetOpen ? 'true' : undefined}
+                    aria-haspopup="true"
+                    onClick={handleTweetClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                </Tooltip>
+                <StyledMenu
+                    id="demo-customized-menu"
+                    MenuListProps={{
+                      'aria-labelledby': 'demo-customized-button',
+                    }}
+                    anchorEl={tweetAnchorEl}
+                    open={twwetOpen}
+                    onClose={handleTweetClose}
+                >
+                  <MenuItem onClick={handleTweetClose} disableRipple>
+                    <EditIcon />
+                    Edit
+                  </MenuItem>
+                  <MenuItem onClick={handleReplyClose} variant="soft" color="danger">
+                    <ListItemDecorator sx={{ color: 'inherit' }}>
+                      <DeleteIcon />
+                    </ListItemDecorator>{' '}
+                    Delete
+                  </MenuItem>
+                  <MenuItem onClick={handleTweetClose} disableRipple>
+                    <PersonAddAltRoundedIcon />
+                    Follow
+                  </MenuItem>
+                  <MenuItem onClick={handleTweetClose} disableRipple>
+                    <FlagIcon />
+                    Report
+                  </MenuItem>
+                </StyledMenu>
+              </>
+
             }
             title="Shrimp and Chorizo Paella"
             subheader="September 14, 2016"
@@ -52,7 +129,7 @@ const PostCard = () => {
         <CardMedia
             component="img"
             height="100%"
-            image="https://upload.wikimedia.org/wikipedia/commons/3/3b/Beef_curry_rice_003.jpg"
+            image="https://upload.wikimedia.org/wikipedia/commons/e/ec/Shoyu_ramen%2C_at_Kasukabe_Station_%282014.05.05%29_1.jpg"
             alt="Paella dish"
         />
         <CardContent>
@@ -63,12 +140,17 @@ const PostCard = () => {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
+          <Tooltip title="Like">
           <IconButton aria-label="add to favorites">
             <FavoriteBorderIcon />
           </IconButton>
+          </Tooltip>
+          <Tooltip title="Retweet">
           <IconButton aria-label="retweet">
             <RepeatIcon />
           </IconButton>
+          </Tooltip>
+          <Tooltip title="Reply">
           <ExpandMore
               expand={expanded}
               onClick={handleExpandClick}
@@ -77,6 +159,7 @@ const PostCard = () => {
           >
             <ModeCommentOutlinedIcon />
           </ExpandMore>
+          </Tooltip>
         </CardActions>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CommentForm />
@@ -88,9 +171,48 @@ const PostCard = () => {
                 <>
               <ListItem
                   secondaryAction={
-                    <IconButton aria-label="settings">
-                      <MoreVertIcon />
-                    </IconButton>
+                    <>
+                      <Tooltip title="More">
+                      <IconButton
+                          aria-label="more"
+                          id="long-button"
+                          aria-controls={replyOpen ? 'long-menu' : undefined}
+                          aria-expanded={replyOpen ? 'true' : undefined}
+                          aria-haspopup="true"
+                          onClick={handleReplyClick}
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                      </Tooltip>
+                      <StyledMenu
+                          id="demo-customized-menu"
+                          MenuListProps={{
+                            'aria-labelledby': 'demo-customized-button',
+                          }}
+                          anchorEl={replyAnchorEl}
+                          open={replyOpen}
+                          onClose={handleReplyClose}
+                      >
+                        <MenuItem onClick={handleReplyClose} disableRipple>
+                          <EditIcon />
+                          Edit
+                        </MenuItem>
+                        <MenuItem onClick={handleReplyClose} variant="soft" color="danger">
+                          <ListItemDecorator sx={{ color: 'inherit' }}>
+                            <DeleteIcon />
+                          </ListItemDecorator>{' '}
+                          Delete
+                        </MenuItem>
+                        <MenuItem onClick={handleTweetClose} disableRipple>
+                          <PersonAddAltRoundedIcon />
+                          Follow
+                        </MenuItem>
+                        <MenuItem onClick={handleReplyClose} disableRipple>
+                          <FlagIcon />
+                          Report
+                        </MenuItem>
+                      </StyledMenu>
+                    </>
                   }
                   alignItems="flex-start">
               <ListItemAvatar>
@@ -112,6 +234,47 @@ const PostCard = () => {
       </Card>
   );
 }
+
+const StyledMenu = styled((props) => (
+    <Menu
+        elevation={0}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'right',
+        }}
+        {...props}
+    />
+))(({ theme }) => ({
+  '& .MuiPaper-root': {
+    borderRadius: 6,
+    marginTop: theme.spacing(1),
+    minWidth: 180,
+    color:
+        theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+    boxShadow:
+        'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+    '& .MuiMenu-list': {
+      padding: '4px 0',
+    },
+    '& .MuiMenuItem-root': {
+      '& .MuiSvgIcon-root': {
+        fontSize: 18,
+        color: theme.palette.text.secondary,
+        marginRight: theme.spacing(1.5),
+      },
+      '&:active': {
+        backgroundColor: alpha(
+            theme.palette.primary.main,
+            theme.palette.action.selectedOpacity,
+        ),
+      },
+    },
+  },
+}));
 
 const ExpandMore = styled((props) => {
   const { expand, ...other } = props;
