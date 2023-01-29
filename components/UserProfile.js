@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { logoutAction } from '../reducers/user';
 
@@ -10,6 +11,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const UserProfile = () => {
+  const { my } = useSelector((state)=>state.user);
   const dispatch = useDispatch();
 
   const [value, setValue] = useState(0);
@@ -28,7 +30,7 @@ const UserProfile = () => {
         action={
           <Button onClick={handleLogout} variant="outlined" style={{ margin: '4px 8px' }}>Log Out</Button>
         }
-        title="Shrimp Chorizo"
+        title={my.username}
       />
       <CardActions>
       <Box sx={{ width: 500 }}>
