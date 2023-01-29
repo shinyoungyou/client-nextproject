@@ -1,4 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { addPost, dummyPost } from '../reducers/post';
 
 import { Box, IconButton, Textarea, Typography } from '@mui/joy';
 import { Button, Input } from "@mui/material";
@@ -9,10 +12,15 @@ import Tooltip from '@mui/material/Tooltip';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 
 const PostForm = () => {
+  const imagePaths = useSelector((state)=>state.post.imagePaths);
+  const dispatch = useDispatch();
+
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
   const [targetIndex, setTargetIndex] = useState(-1);
-
+  useEffect(()=>{
+    console.log(images);
+  }, [images])
   const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
   // useEffect(()=>{
   //   console.log(targetIndex);
@@ -24,7 +32,7 @@ const PostForm = () => {
       const file = files[i];
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImages((prev) => [...prev, { url: reader.result, file } ])
+        setImages((prev) => [...prev, { src: reader.result, file } ])
       };
       reader.readAsDataURL(file);
     }
@@ -32,12 +40,14 @@ const PostForm = () => {
   const handleImageDelete = (index) => {
 
   }
-  const handleSubmit = () => {
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(addPost(dummyPost));
+    setText('');
   }
   return (
     <Box sx={{ m: 1 }}>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <Textarea
           placeholder="Type in here…"
           value={text}
@@ -77,14 +87,14 @@ const PostForm = () => {
           endDecorator={
           <Box sx={{ width: '100%' }} >
             <ImageList sx={{ width: 500, maxHeight: 350 }} cols={3} rowHeight={164}>
-              {images?.map((item, index) => (
-                <ImageListItem sx={{ position: 'relative' }} key={item.id}>
+              {imagePaths.map((item, index) => (
+                <ImageListItem sx={{ position: 'relative' }} key={index}>
                   <IconButton sx={{ position: 'absolute' }} onClick={()=>setTargetIndex(index)}>
                     <ClearRoundedIcon sx={{ bgcolor: 'rgba(25, 25, 25, 0.5)', color: 'white', borderRadius: '100%', p: 0.5, my: 0.5 }} />
                   </IconButton>
                   <img
-                    src={item.url}
-                    srcSet={item.url}
+                    src={item.src}
+                    srcSet={item.src}
                     alt={item.file?.name}
                     loading="lazy"
                   />
