@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { loginAction } from '../reducers/user';
+import { loginAction, dummyMy } from '../reducers/user';
 import Link from 'next/link';
 import {
   Box,
@@ -38,11 +38,11 @@ const LoginForm = () => {
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    setForm({ 
+    dispatch(loginAction(dummyMy));
+    setForm({
       email: "",
       pass:""
     })
-    dispatch(loginAction(form));
   }, [form]);
 
   return (
