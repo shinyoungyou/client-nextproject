@@ -41,11 +41,11 @@ const UserProfile = () => {
           setValue(newValue);
         }}
       >
-        
+
         <BottomNavigationAction label="Tweets" icon={<RestoreIcon />} />
         <BottomNavigationAction label="Following" icon={<FavoriteIcon />} />
         <BottomNavigationAction label="Followers" icon={<LocationOnIcon />} />
-      
+
       </BottomNavigation>
       </Box>
       </CardActions>
