@@ -20,7 +20,7 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import '@fontsource/public-sans';
 
 const AppLayout = ({ children }) => {
-  const { isLoggedIn } = useSelector((state)=>state.user);
+  const { my } = useSelector((state)=>state.user);
   const menuId = "primary-search-account-menu";
 
   return (
@@ -67,7 +67,7 @@ const AppLayout = ({ children }) => {
       </AppBar>
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>
-          {isLoggedIn ? <UserProfile /> : <LoginForm />}
+          {my ? <UserProfile /> : <LoginForm />}
         </Grid>
         <Grid item xs={12} md={6}>
           {children}

@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { loginAction, dummyMy } from '../reducers/user';
+import { loginRequestAction, dummyMy } from '../reducers/user';
 import Link from 'next/link';
 import {
   Box,
@@ -17,6 +17,7 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const LoginForm = () => {
+  const { logInLoading } = useSelector((state)=>state.user)
   const dispatch = useDispatch();
   const [form, setForm] = useState({
     email: "",
@@ -38,7 +39,7 @@ const LoginForm = () => {
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    dispatch(loginAction(dummyMy));
+    dispatch(loginRequestAction(form));
     setForm({
       email: "",
       pass:""
@@ -88,7 +89,7 @@ const LoginForm = () => {
           />
         </FormControl>
         <ButtonGroup aria-label="outlined button group" style={{ width: '100%', margin: '0 8px' }}>
-          <Button type="submit" variant="contained">Login</Button>
+          <Button type="submit" variant="contained" loading={logInLoading}>Login</Button>
           <Button variant="outlined">
             <Link href="/signup">
               <a style={{ textDecoration: 'none', color: '#1976d2' }}>

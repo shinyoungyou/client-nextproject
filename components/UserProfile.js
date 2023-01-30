@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { logoutAction } from '../reducers/user';
+import { logoutRequestAction } from '../reducers/user';
 
 import { Avatar, Box, Button, BottomNavigation, BottomNavigationAction, Card, CardHeader, CardContent, CardActions } from '@mui/material';
 import { blue } from '@mui/material/colors';
@@ -16,7 +16,7 @@ const UserProfile = () => {
 
   const [value, setValue] = useState(0);
   const handleLogout = () =>{
-    dispatch(logoutAction);
+    dispatch(logoutRequestAction);
   }
 
   return (
