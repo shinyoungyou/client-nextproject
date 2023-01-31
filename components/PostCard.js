@@ -99,22 +99,22 @@ const PostCard = ({post}) => {
               onClose={handleTweetClose}
           >
             {my?.id == post.User.id ? <>
-              <MenuItem key={0} onClick={handleTweetClose} disableRipple>
+              <MenuItem key="Edit" onClick={handleTweetClose} disableRipple>
                 <EditIcon/>
                 Edit
               </MenuItem>
-              <MenuItem key={1} onClick={handleReplyClose} variant="soft" color="danger">
+              <MenuItem key="Delete" onClick={handleReplyClose} variant="soft" color="danger">
                 <ListItemDecorator sx={{color: 'inherit'}}>
                   <DeleteIcon/>
                 </ListItemDecorator>{' '}
                 Delete
               </MenuItem>
             </> : <>
-              <MenuItem key={0} onClick={handleTweetClose} disableRipple>
+              <MenuItem key="Follow" onClick={handleTweetClose} disableRipple>
                 <PersonAddAltRoundedIcon/>
                 Follow
               </MenuItem>
-              <MenuItem key={1} onClick={handleTweetClose} disableRipple>
+              <MenuItem key="Report" onClick={handleTweetClose} disableRipple>
                 <FlagIcon/>
                 Report
               </MenuItem>
