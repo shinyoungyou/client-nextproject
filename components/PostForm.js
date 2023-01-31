@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { addPost, dummyPost } from '../reducers/post';
+import { addPostRequest, dummyPost } from '../reducers/post';
 
 import { Box, IconButton, Textarea, Typography } from '@mui/joy';
 import { Button, Input } from "@mui/material";
@@ -42,7 +42,7 @@ const PostForm = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addPost(dummyPost));
+    dispatch(addPostRequest(dummyPost));
     setText('');
   }
   return (
