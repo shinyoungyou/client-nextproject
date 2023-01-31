@@ -1,7 +1,9 @@
 import Head from "next/head";
+import { useState, useEffect, useCallback } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { signupRequestAction } from '../reducers/user';
 import AppLayout from '../components/AppLayout';
 
-import { useState, useEffect, useCallback } from "react";
 import Link from 'next/link';
 import {
   Box,
@@ -18,9 +20,11 @@ import {
   Alert
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-
+import { LoadingButton } from '@mui/lab';
 
 const Signup = () => {
+  const dispatch = useDispatch();
+  const { signUpLoading, signUpDone } = useSelector((state)=>state.user);
   const [form, setForm] = useState({
     email: "",
     username: "",
@@ -34,6 +38,18 @@ const Signup = () => {
   const { email, username, pass, passCheck, term } = form;
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(()=>{
+    if(signUpDone){
+      setForm({
+        email: "",
+        username: "",
+        pass: "",
+        passCheck: "",
+        term: false
+      })
+    }
+  }, [signUpDone])
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -73,16 +89,10 @@ const Signup = () => {
     }
 
     // send req first,
+    dispatch(signupRequestAction({ email, username, pass }));
     console.log("fake req");
     console.log(email, username, pass);
-    // and then initialize
-    setForm({ 
-      email: "",
-      username: "",
-      pass: "",
-      passCheck: "",
-      term: false
-    })
+    // and then initializem, but do not here
   }, [form]);
 
   return (
@@ -177,7 +187,7 @@ const Signup = () => {
           <Box sx={{ margin: '0 8px' }}>
             <FormControlLabel sx={{ display: 'block' }} control={<Checkbox name="term" value={term} onChange={handleChange} />} label="제로초 말을 잘 들을 것을 동의합니다." />
             {termError && <Alert severity="error">This is an error alert — check it out!</Alert>}
-            <Button sx={{ display: 'block' }} type="submit" variant="contained">Register</Button>
+            <LoadingButton sx={{ display: 'block' }} type="submit" variant="contained" loading={signUpLoading}>Register</LoadingButton>
           </Box>
           </form>
         </Box>

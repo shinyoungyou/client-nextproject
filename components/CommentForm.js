@@ -1,19 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { addCommentRequest } from '../reducers/post';
 
 import { Box, IconButton, Textarea, Typography } from '@mui/joy';
-import { Button, Input } from "@mui/material";
-import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
+import { LoadingButton } from '@mui/lab';
 
-const CommentForm = () => {
+const CommentForm = ({ post }) => {
+  const id = useSelector((state)=>state.user.my?.id);
+  const { addCommentLoading, addCommentDone } = useSelector((state)=>state.post);
+  const dispatch = useDispatch();
   const [text, setText] = useState('');
+
+  useEffect(()=>{
+    if(addCommentDone){
+      setText('');
+    }
+  }, [addCommentDone])
+
 
   const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
   const handleSubmit = () => {
-
-
+    dispatch(addCommentRequest({ content: text, postId: post.id, userId: id  }));
   }
   return (
       <Box sx={{ m: 1 }}>
@@ -50,7 +58,7 @@ const CommentForm = () => {
               }
               endDecorator={
                 <Box sx={{ width: '100%', display: 'flex', justifyContent: 'right' }}>
-                    <Button type="submit" variant="contained">Reply</Button>
+                    <LoadingButton type="submit" variant="contained" loading={addCommentLoading}>Reply</LoadingButton>
                 </Box>
               }
               sx={{ minWidth: 300, borderColor: '#D8D8DF', "&:hover": { borderColor: '#B9B9C6' } }}

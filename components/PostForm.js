@@ -10,13 +10,21 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import Tooltip from '@mui/material/Tooltip';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
+import { LoadingButton } from '@mui/lab';
 
 const PostForm = () => {
-  const imagePaths = useSelector((state)=>state.post.imagePaths);
+  const { imagePaths, addPostLoading, addPostDone } = useSelector((state)=>state.post);
   const dispatch = useDispatch();
 
   const [text, setText] = useState('');
   const [images, setImages] = useState([]);
+
+  useEffect(()=>{
+    if(addPostDone){
+      setText('');
+    }
+  }, [addPostDone])
+
   const [targetIndex, setTargetIndex] = useState(-1);
   useEffect(()=>{
     console.log(images);
@@ -43,7 +51,6 @@ const PostForm = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     dispatch(addPostRequest(dummyPost));
-    setText('');
   }
   return (
     <Box sx={{ m: 1 }}>
@@ -89,7 +96,7 @@ const PostForm = () => {
             <ImageList sx={{ width: 500, maxHeight: 350 }} cols={3} rowHeight={164}>
               {imagePaths.map((item, index) => (
                 <ImageListItem sx={{ position: 'relative' }} key={index}>
-                  <IconButton sx={{ position: 'absolute' }} onClick={()=>setTargetIndex(index)}>
+                  <IconButton sx={{ position: 'absolute', zIndex: 1 }} onClick={()=>setTargetIndex(index)}>
                     <ClearRoundedIcon sx={{ bgcolor: 'rgba(25, 25, 25, 0.5)', color: 'white', borderRadius: '100%', p: 0.5, my: 0.5 }} />
                   </IconButton>
                   <img
@@ -102,7 +109,7 @@ const PostForm = () => {
               ))}
               </ImageList>
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'right' }}>
-              <Button type="submit" variant="contained">Tweet</Button>
+              <LoadingButton type="submit" variant="contained" loading={addPostLoading}>Tweet</LoadingButton>
             </Box>
           </Box>
           }

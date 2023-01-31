@@ -156,7 +156,7 @@ const PostCard = ({post}) => {
       </Tooltip>
     </CardActions>
     <Collapse in={expanded} timeout="auto" unmountOnExit>
-      <CommentForm/>
+      <CommentForm post={post} />
       <List
           subheader={<ListSubheader>{post.Comments.length}개의 댓글</ListSubheader>}
           sx={{m: 1, bgcolor: 'background.paper'}}

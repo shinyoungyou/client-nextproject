@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { loginRequestAction, dummyMy } from '../reducers/user';
@@ -15,9 +15,10 @@ import {
   Button
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { LoadingButton } from '@mui/lab';
 
 const LoginForm = () => {
-  const { logInLoading } = useSelector((state)=>state.user)
+  const { logInLoading, logInDone } = useSelector((state)=>state.user)
   const dispatch = useDispatch();
   const [form, setForm] = useState({
     email: "",
@@ -26,6 +27,15 @@ const LoginForm = () => {
   const { email, pass } = form;
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(()=>{
+    if(logInDone){
+      setForm({
+        email: "",
+        pass:""
+      })
+    }
+  }, [logInDone])
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
@@ -40,10 +50,6 @@ const LoginForm = () => {
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
     dispatch(loginRequestAction(form));
-    setForm({
-      email: "",
-      pass:""
-    })
   }, [form]);
 
   return (
@@ -89,7 +95,7 @@ const LoginForm = () => {
           />
         </FormControl>
         <ButtonGroup aria-label="outlined button group" style={{ width: '100%', margin: '0 8px' }}>
-          <Button type="submit" variant="contained" loading={logInLoading}>Login</Button>
+          <LoadingButton type="submit" variant="contained" loading={logInLoading}>Login</LoadingButton>
           <Button variant="outlined">
             <Link href="/signup">
               <a style={{ textDecoration: 'none', color: '#1976d2' }}>

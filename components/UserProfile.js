@@ -9,9 +9,10 @@ import { blue } from '@mui/material/colors';
 import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { LoadingButton } from '@mui/lab';
 
 const UserProfile = () => {
-  const { my } = useSelector((state)=>state.user);
+  const { my, logOutLoading } = useSelector((state)=>state.user);
   const dispatch = useDispatch();
 
   const [value, setValue] = useState(0);
@@ -28,7 +29,7 @@ const UserProfile = () => {
           </Avatar>
         }
         action={
-          <Button onClick={handleLogout} variant="outlined" style={{ margin: '4px 8px' }}>Log Out</Button>
+          <LoadingButton onClick={handleLogout} variant="outlined" loading={logOutLoading} style={{ margin: '4px 8px' }}>Log Out</LoadingButton>
         }
         title={my.username}
       />
