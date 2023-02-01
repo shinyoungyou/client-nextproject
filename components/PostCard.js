@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
-import {useSelector} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { removePostRequest } from '../reducers/post'
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import PostImages from '../components/PostImages'
-import PostCardContent from '../components/PostCardContent';
 import CommentForm from '../components/CommentForm';
 import CommentListItem from '../components/CommentListItem';
 import {StyledMenu, ExpandMore} from "../styles";
@@ -11,7 +11,6 @@ import {StyledMenu, ExpandMore} from "../styles";
 import {
   Card,
   CardHeader,
-  CardMedia,
   CardContent,
   CardActions,
   Collapse,
@@ -19,12 +18,7 @@ import {
   IconButton,
   Typography,
   List,
-  ListItem,
-  Divider,
-  ListItemText,
-  ListItemAvatar,
   ListSubheader,
-  Menu,
   MenuItem,
   Tooltip
 } from '@mui/material';
@@ -38,9 +32,12 @@ import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import FlagIcon from "@mui/icons-material/Flag";
+import { LoadingButton } from '@mui/lab';
 
-const PostCard = ({post}) => {
+const PostCard = ({ post }) => {
   const my = useSelector((state) => state.user.my);
+  const { removePostLoading } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -71,11 +68,19 @@ const PostCard = ({post}) => {
     setReplyAnchorEl(null);
   };
 
+  const handleDeletePost = () => {
+    dispatch(removePostRequest(post.id));
+  }
+
   return (<Card sx={{m: 1}}>
     <CardHeader
-        avatar={<Avatar sx={{bgcolor: blue[500]}} aria-label="recipe">
-          R
-        </Avatar>}
+        avatar={
+          <Avatar
+              alt={post.User.username}
+              src="/static/images/avatar/1.jpg"
+              sx={{ bgcolor: blue[500] }}
+          />
+        }
         action={<>
           <Tooltip title="More">
             <IconButton
@@ -103,11 +108,13 @@ const PostCard = ({post}) => {
                 <EditIcon/>
                 Edit
               </MenuItem>
-              <MenuItem key="Delete" onClick={handleReplyClose} variant="soft" color="danger">
-                <ListItemDecorator sx={{color: 'inherit'}}>
-                  <DeleteIcon/>
-                </ListItemDecorator>{' '}
-                Delete
+              <MenuItem key="Delete" onClick={handleDeletePost} variant="soft" color="danger">
+                <LoadingButton loading={removePostLoading} sx={{ p: 0, color: "inherit" }}>
+                  <ListItemDecorator sx={{color: 'inherit'}}>
+                    <DeleteIcon/>
+                  </ListItemDecorator>{' '}
+                  Delete
+                </LoadingButton>
               </MenuItem>
             </> : <>
               <MenuItem key="Follow" onClick={handleTweetClose} disableRipple>
@@ -156,12 +163,12 @@ const PostCard = ({post}) => {
       </Tooltip>
     </CardActions>
     <Collapse in={expanded} timeout="auto" unmountOnExit>
-      <CommentForm post={post} />
+      {my && <CommentForm post={post}/>}
       <List
-          subheader={<ListSubheader>{post.Comments.length}개의 댓글</ListSubheader>}
+          subheader={<ListSubheader>{post.Comments ? post.Comments.length : 0}개의 댓글</ListSubheader>}
           sx={{m: 1, bgcolor: 'background.paper'}}
       >
-        {post.Comments.map((comment) => (<CommentListItem comment={comment} key={comment.id}/>))}
+        {post.Comments?.map((comment) => (<CommentListItem comment={comment} key={comment.id}/>))}
       </List>
     </Collapse>
   </Card>);

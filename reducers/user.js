@@ -84,6 +84,8 @@ export const CHANGE_NICKNAME_REQUEST = 'CHANGE_NICKNAME_REQUEST';
 export const CHANGE_NICKNAME_SUCCESS = 'CHANGE_NICKNAME_SUCCESS';
 export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
 
+export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
+export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 export const loginRequestAction = (data) => {
   return {
     type: LOG_IN_REQUEST,
@@ -198,6 +200,12 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
       draft.changeNicknameLoading = false;
       draft.changeNicknameError = action.error;
       break;
+    case ADD_POST_TO_ME:
+      draft.my.Posts.unshift({ id: action.data });
+      break;
+    case REMOVE_POST_OF_ME:
+      draft.my.Posts = draft.my.Posts.filter((post) => post.id !== action.data);
+      break;
     default:
       return state;
   }
@@ -212,60 +220,6 @@ export const dummyMy =  {
   Followers: null,
   Posts: [{
     id: 1,
-    content: "This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like.",
-    createdAt: "September 14, 2016",
-    User: {
-      id: 1,
-      username: "Shrimp and Chorizo Paella"
-    },
-    Likers: [
-      {
-        id: 2
-      },
-      {
-        id: 3
-      },
-      {
-        id: 4
-      },
-    ],
-    RetweetId: null,
-    Retweet: null,
-    Images: [{
-      src: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Sashimi_-_Maguro_Restaurant%2C_Bangna%2C_Bangkok_%2844856596864%29.jpg",
-      alt: "Salmon_Sushi.jpg"
-    }],
-    Comments: [
-      {
-        id: 1,
-        content: "Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10 minutes.",
-        createdAt: "",
-        User: {
-          id: 2,
-          username: "Mary S Bing"
-        },
-      },
-      {
-        id: 2,
-        content: "Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken and chorizo.",
-        createdAt: "",
-        User: {
-          id: 3,
-          username: "Rose A Kramer"
-
-        },
-      },
-      {
-        id: 3,
-        content: "Add rice and stir very gently to distribute. Top with artichokes andpeppers, and cook without stirring, until most of the liquid is absorbed,15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp andmussels, tucking them down into the rice, and cook again.",
-        createdAt: "",
-        User: {
-          id: 4,
-          username: "Joy T Jones"
-
-        },
-      },
-    ]
   }]
 }
 

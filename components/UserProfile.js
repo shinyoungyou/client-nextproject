@@ -43,9 +43,9 @@ const UserProfile = () => {
         }}
       >
 
-        <BottomNavigationAction label="Tweets" icon={<RestoreIcon />} />
-        <BottomNavigationAction label="Following" icon={<FavoriteIcon />} />
-        <BottomNavigationAction label="Followers" icon={<LocationOnIcon />} />
+        <BottomNavigationAction label="Tweets" icon={my.Posts ? my.Posts.length : 0} />
+        <BottomNavigationAction label="Following" icon={my.Followings ? my.Followings.length: 0}  />
+        <BottomNavigationAction label="Followers" icon={my.Followers ? my.Followers.length: 0} />
 
       </BottomNavigation>
       </Box>

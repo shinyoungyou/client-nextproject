@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { addPostRequest, dummyPost } from '../reducers/post';
+import { addPostRequest } from '../reducers/post';
 
 import { Box, IconButton, Textarea, Typography } from '@mui/joy';
 import { Button, Input } from "@mui/material";
@@ -14,6 +14,7 @@ import { LoadingButton } from '@mui/lab';
 
 const PostForm = () => {
   const { imagePaths, addPostLoading, addPostDone } = useSelector((state)=>state.post);
+  const { id } = useSelector((state)=>state.user.my);
   const dispatch = useDispatch();
 
   const [text, setText] = useState('');
@@ -50,7 +51,7 @@ const PostForm = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addPostRequest(dummyPost));
+    dispatch(addPostRequest({ content: text, userId: id }));
   }
   return (
     <Box sx={{ m: 1 }}>
