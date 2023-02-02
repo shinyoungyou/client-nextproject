@@ -14,7 +14,7 @@ const PostImages = ({ images }) => {
             />}
 
         {(images.length == 2 || images.length == 4) &&
-            <ImageList sx={{ m: 0 }} cols={2} rowHeight={200}>
+            <ImageList sx={{ m: 0 }} cols={2} rowHeight={250}>
               {images.map((image, index) => (
                   <ImageListItem key={index}>
                     <img
