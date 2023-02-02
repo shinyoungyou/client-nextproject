@@ -2,7 +2,12 @@ import produce from 'immer';
 
 import shortId from 'shortid';
 import { faker } from '@faker-js/faker';
+
 export const initialState = {
+  bringMorePosts: true,
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -122,6 +127,10 @@ export const initialState = {
     }],
 }
 
+export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
+export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
+export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
+
 export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
@@ -137,6 +146,13 @@ export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
 export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
 export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
+
+export const loadPostsRequest = (data) => {
+  return {
+    type: LOAD_POSTS_REQUEST,
+    data
+  }
+}
 
 export const addPostRequest = (data) => {
   return {
@@ -159,8 +175,30 @@ export const addCommentRequest = (data) => {
   }
 }
 
+export const removeCommentRequest = (data) => {
+  return {
+    type: REMOVE_COMMENT_REQUEST,
+    data
+  }
+}
+
 const reducer = (state = initialState, action) => produce(state, (draft)=>{
   switch (action.type){
+    case LOAD_POSTS_REQUEST:
+      draft.loadPostsLoading = true;
+      draft.loadPostsDone = false;
+      draft.loadPostsError = null;
+      break;
+    case LOAD_POSTS_SUCCESS:
+      draft.mainPosts = draft.mainPosts.concat(action.data);
+      draft.loadPostsLoading = false;
+      draft.loadPostsDone = true;
+      draft.bringMorePosts = draft.mainPosts.length < 50;
+      break;
+    case LOAD_POSTS_FAILURE:
+      draft.loadPostsLoading = false;
+      draft.loadPostsError = action.error;
+      break;
     case ADD_POST_REQUEST:
       draft.addPostLoading = true;
       draft.addPostDone = false;
@@ -195,8 +233,8 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
       draft.addCommentError = null;
       break;
     case ADD_COMMENT_SUCCESS:
-      const post = draft.mainPosts.find((post)=>post.id == action.data.postId);
-      post.Comments.unshift(action.data);
+      const addCommentToPost = draft.mainPosts.find((post) => post.id === action.data.postId);
+      addCommentToPost.Comments.unshift(action.data);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
@@ -210,8 +248,9 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
       draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS:
-      // const post = draft.mainPosts.find((post) => post.id === action.data.postId);
-      // post.Comments = post.Comments.filter((comment) => comment.id !== action.data.id);
+      console.log(action.data)
+      const removeCommentOfPost = draft.mainPosts.find((post) => post.id === action.data.postId);
+      removeCommentOfPost.Comments = removeCommentOfPost.Comments.filter((comment) => comment.id !== action.data.id);
       draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
       break;
@@ -222,6 +261,36 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
     default:
       break;
   }
+})
+
+export const getDummyPosts = (number) => Array(number).fill().map((post) => ({
+   id: shortId.generate(),
+   content: faker.lorem.paragraphs(2),
+   createdAt: `${faker.date.past(10)}`.substring(0,24),
+   User: {
+     id: shortId.generate(),
+     username: faker.name.fullName()
+   },
+  Images: [{
+    src: `${faker.image.cats()}?random=${Date.now()}`,
+    alt: "cat"
+  }],
+  Comments: [],
+}))
+
+export const getSingleDummyPost = (action, id) => ({
+  id,
+  content: faker.lorem.paragraphs(2),
+  createdAt: `${faker.date.past(10)}`.substring(0,24),
+  User: {
+    id: action.data.userId,
+    username: faker.name.fullName()
+  },
+  Images: Array(Math.floor(Math.random()*4)+1).fill().map((image, index)=>({
+    src: `${faker.image.cats()}?random=${Date.now()+index}`,
+    alt: "cat"
+  })),
+  Comments: []
 })
 
 export const dummyPost = {
@@ -261,17 +330,15 @@ export const dummyPost = {
   // ]
 }
 
-export const dummyComment = (data) => {
-  return {
-    id: shortId.generate(),
-    postId: data.postId,
-    content: data.content,
-    createdAt: faker.date.past(),
-    User: {
-      id: data.userId,
-      username: "Rose A Kramer"
-    },
-  }
-}
+export const getDummyComment = (action, id) => ({
+  id,
+  postId: action.data.postId,
+  content: faker.lorem.sentences(2),
+  createdAt: `${faker.date.past(5)}`.substring(0,24),
+  User: {
+    id: action.data.userId,
+    username: faker.name.fullName()
+  },
+})
 
 export default reducer;
