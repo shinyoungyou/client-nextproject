@@ -14,7 +14,7 @@ import { LoadingButton } from '@mui/lab';
 
 const PostForm = () => {
   const { imagePaths, addPostLoading, addPostDone } = useSelector((state)=>state.post);
-  const { id } = useSelector((state)=>state.user.my);
+  const { my } = useSelector((state)=>state.user);
   const dispatch = useDispatch();
 
   const [text, setText] = useState('');
@@ -51,7 +51,7 @@ const PostForm = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addPostRequest({ content: text, userId: id }));
+    dispatch(addPostRequest({ content: text, userId: my.id, User: my }));
   }
   return (
     <Box sx={{ m: 1 }}>

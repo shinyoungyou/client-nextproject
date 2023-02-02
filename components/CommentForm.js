@@ -7,13 +7,11 @@ import Tooltip from '@mui/material/Tooltip';
 import { LoadingButton } from '@mui/lab';
 
 const CommentForm = ({ post }) => {
-  const id = useSelector((state)=>state.user.my.id);
+  const { my } = useSelector((state)=>state.user);
   const { addCommentLoading, addCommentDone } = useSelector((state)=>state.post);
   const dispatch = useDispatch();
   const [text, setText] = useState('');
-  useEffect(()=>{
-    console.log(post.id)
-  }), [post]
+
   useEffect(()=>{
     if(addCommentDone){
       setText('');
@@ -24,7 +22,7 @@ const CommentForm = ({ post }) => {
   const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addCommentRequest({ content: text, postId: post.id, userId: id  }));
+    dispatch(addCommentRequest({ content: text, postId: post.id, userId: my.id, User: my }));
   }
   return (
       <Box sx={{ m: 1 }}>
