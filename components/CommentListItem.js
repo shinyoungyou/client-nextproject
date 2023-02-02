@@ -1,4 +1,7 @@
+import { useDispatch, useSelector } from "react-redux";
+import { removeCommentRequest } from "../reducers/post";
 import React, {useState} from "react";
+import MoreMenu from './MoreMenu';
 
 import {StyledMenu} from "../styles";
 import {
@@ -13,40 +16,22 @@ import {
   Tooltip
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import EditIcon from "@mui/icons-material/Edit";
-import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
-import FlagIcon from "@mui/icons-material/Flag";
-const CommentListItem = ({comment}) => {
-  const [expanded, setExpanded] = useState(false);
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
+const CommentListItem = ({ comment }) => {
+  const { removeCommentLoading } = useSelector((state) => state.post);
+  const dispatch = useDispatch();
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
-  const [tweetAnchorEl, setTweetAnchorEl] = React.useState(null);
-  const [replyAnchorEl, setReplyAnchorEl] = React.useState(null);
-
-  const tweetOpen = Boolean(tweetAnchorEl);
-  const replyOpen = Boolean(replyAnchorEl);
-
-  const handleTweetClick = (event) => {
-    setTweetAnchorEl(event.currentTarget);
-  };
-
-  const handleTweetClose = () => {
-    setTweetAnchorEl(null);
-  };
-
-  const handleReplyClick = (event) => {
-    setReplyAnchorEl(event.currentTarget);
-  };
-
-
-  const handleReplyClose = () => {
-    setReplyAnchorEl(null);
-  };
+  const handleDeleteComment = () => {
+    dispatch(removeCommentRequest(comment));
+  }
 
   return (
       <>
@@ -57,42 +42,22 @@ const CommentListItem = ({comment}) => {
                 <IconButton
                   aria-label="more"
                   id="long-button"
-                  aria-controls={replyOpen ? 'long-menu' : undefined}
-                  aria-expanded={replyOpen ? 'true' : undefined}
+                  aria-controls={open ? 'long-menu' : undefined}
+                  aria-expanded={open ? 'true' : undefined}
                   aria-haspopup="true"
-                  onClick={handleReplyClick}
+                  onClick={handleClick}
                 >
                   <MoreVertIcon/>
                 </IconButton>
               </Tooltip>
-              <StyledMenu
-                  id="demo-customized-menu"
-                  MenuListProps={{
-                    'aria-labelledby': 'demo-customized-button',
-                  }}
-                  anchorEl={tweetAnchorEl}
-                  open={tweetOpen}
-                  onClose={handleTweetClose}
-              >
-                <MenuItem key={0} onClick={handleTweetClose} disableRipple>
-                  <EditIcon/>
-                  Edit
-                </MenuItem>
-                <MenuItem key={1} onClick={handleReplyClose} variant="soft" color="danger">
-                  <ListItemDecorator sx={{color: 'inherit'}}>
-                    <DeleteIcon/>
-                  </ListItemDecorator>{' '}
-                  Delete
-                </MenuItem>
-                <MenuItem key={0} onClick={handleTweetClose} disableRipple>
-                  <PersonAddAltRoundedIcon/>
-                  Follow
-                </MenuItem>
-                <MenuItem key={1} onClick={handleTweetClose} disableRipple>
-                  <FlagIcon/>
-                  Report
-                </MenuItem>
-              </StyledMenu>
+              <MoreMenu
+                item={comment}
+                anchorEl={anchorEl}
+                setAnchorEl={setAnchorEl}
+                open={open}
+                handleDelete={handleDeleteComment}
+                removeLoading={removeCommentLoading}
+              />
             </>
         } alignItems="flex-start">
           <ListItemAvatar>

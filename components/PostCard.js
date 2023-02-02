@@ -33,6 +33,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import FlagIcon from "@mui/icons-material/Flag";
 import { LoadingButton } from '@mui/lab';
+import MoreMenu from "./MoreMenu";
 
 const PostCard = ({ post }) => {
   const my = useSelector((state) => state.user.my);
@@ -45,34 +46,19 @@ const PostCard = ({ post }) => {
     setExpanded(!expanded);
   };
 
-  const [tweetAnchorEl, setTweetAnchorEl] = React.useState(null);
-  const [replyAnchorEl, setReplyAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const tweetOpen = Boolean(tweetAnchorEl);
-  const replyOpen = Boolean(replyAnchorEl);
+  const open = Boolean(anchorEl);
 
-  const handleTweetClick = (event) => {
-    setTweetAnchorEl(event.currentTarget);
-  };
-
-  const handleTweetClose = () => {
-    setTweetAnchorEl(null);
-  };
-
-  const handleReplyClick = (event) => {
-    setReplyAnchorEl(event.currentTarget);
-  };
-
-
-  const handleReplyClose = () => {
-    setReplyAnchorEl(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
   };
 
   const handleDeletePost = () => {
     dispatch(removePostRequest(post.id));
   }
 
-  return (<Card sx={{m: 1}}>
+  return (<Card sx={{m: 1, mb: 3}}>
     <CardHeader
         avatar={
           <Avatar
@@ -86,49 +72,23 @@ const PostCard = ({ post }) => {
             <IconButton
                 aria-label="more"
                 id="long-button"
-                aria-controls={tweetOpen ? 'long-menu' : undefined}
-                aria-expanded={tweetOpen ? 'true' : undefined}
+                aria-controls={open ? 'long-menu' : undefined}
+                aria-expanded={open ? 'true' : undefined}
                 aria-haspopup="true"
-                onClick={handleTweetClick}
+                onClick={handleClick}
             >
               <MoreVertIcon/>
             </IconButton>
           </Tooltip>
-          <StyledMenu
-              id="demo-customized-menu"
-              MenuListProps={{
-                'aria-labelledby': 'demo-customized-button',
-              }}
-              anchorEl={tweetAnchorEl}
-              open={tweetOpen}
-              onClose={handleTweetClose}
-          >
-            {my?.id == post.User.id ? <>
-              <MenuItem key="Edit" onClick={handleTweetClose} disableRipple>
-                <EditIcon/>
-                Edit
-              </MenuItem>
-              <MenuItem key="Delete" onClick={handleDeletePost} variant="soft" color="danger">
-                <LoadingButton loading={removePostLoading} sx={{ p: 0, color: "inherit" }}>
-                  <ListItemDecorator sx={{color: 'inherit'}}>
-                    <DeleteIcon/>
-                  </ListItemDecorator>{' '}
-                  Delete
-                </LoadingButton>
-              </MenuItem>
-            </> : <>
-              <MenuItem key="Follow" onClick={handleTweetClose} disableRipple>
-                <PersonAddAltRoundedIcon/>
-                Follow
-              </MenuItem>
-              <MenuItem key="Report" onClick={handleTweetClose} disableRipple>
-                <FlagIcon/>
-                Report
-              </MenuItem>
-            </>}
-          </StyledMenu>
+          <MoreMenu
+              item={post}
+              anchorEl={anchorEl}
+              setAnchorEl={setAnchorEl}
+              open={open}
+              handleDelete={handleDeletePost}
+              removeLoading={removePostLoading}
+          />
         </>
-
         }
         title={post.User.username}
         subheader={post.createdAt}
@@ -168,7 +128,11 @@ const PostCard = ({ post }) => {
           subheader={<ListSubheader>{post.Comments ? post.Comments.length : 0}개의 댓글</ListSubheader>}
           sx={{m: 1, bgcolor: 'background.paper'}}
       >
-        {post.Comments?.map((comment) => (<CommentListItem comment={comment} key={comment.id}/>))}
+        {post.Comments?.map((comment) => (
+            <CommentListItem
+                comment={comment}
+                key={comment.id}
+            />))}
       </List>
     </Collapse>
   </Card>);
