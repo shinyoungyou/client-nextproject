@@ -1,15 +1,14 @@
 import { all, fork, takeLatest, call, put, delay } from 'redux-saga/effects';
 import {
   LOAD_POSTS_REQUEST, LOAD_POSTS_SUCCESS, LOAD_POSTS_FAILURE, getDummyPosts,
-  ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, getSingleDummyPost,
+  ADD_POST_REQUEST, ADD_POST_SUCCESS, ADD_POST_FAILURE, postMyDummyPost,
   REMOVE_POST_REQUEST, REMOVE_POST_SUCCESS, REMOVE_POST_FAILURE,
-  ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, getDummyComment,
+  ADD_COMMENT_REQUEST, ADD_COMMENT_SUCCESS, ADD_COMMENT_FAILURE, postMyDummyComment,
   REMOVE_COMMENT_REQUEST, REMOVE_COMMENT_SUCCESS, REMOVE_COMMENT_FAILURE
 } from "../reducers/post";
 import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from "../reducers/user";
 import axios from 'axios';
 import shortId from 'shortid';
-import { faker } from '@faker-js/faker/locale/en_CA';
 
 function loadPostsAPI(data) {
   return axios.post(`/api/posts/`, data);
@@ -44,7 +43,7 @@ function* addPost(action) {
     const id = shortId.generate();
     yield put({
       type: ADD_POST_SUCCESS,
-      data: getSingleDummyPost(action, id)
+      data: postMyDummyPost(action, id)
     })
     yield put({
       type: ADD_POST_TO_ME,
@@ -97,7 +96,7 @@ function* addComment(action) {
     const id = shortId.generate();
     yield put({
       type: ADD_COMMENT_SUCCESS,
-      data: getDummyComment(action, id)
+      data: postMyDummyComment(action, id)
     })
   }
   catch(err) {

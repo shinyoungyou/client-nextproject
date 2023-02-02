@@ -1,7 +1,7 @@
 import produce from 'immer';
 
 import shortId from 'shortid';
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker/locale/en_CA';
 
 export const initialState = {
   bringMorePosts: true,
@@ -20,77 +20,7 @@ export const initialState = {
   removeCommentLoading: false,
   removeCommentDone: false,
   removeCommentError: null,
-  mainPosts: [{
-    id: 1,
-    content: "This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like. #paella #meal",
-    createdAt: "September 14, 2016",
-    User: {
-      id: 1,
-      username: "Shrimp and Chorizo Paella"
-    },
-    Likers: [
-      {
-        id: 2
-      },
-      {
-        id: 3
-      },
-      {
-        id: 4
-      },
-    ],
-    RetweetId: null,
-    Retweet: null,
-    Images: [{
-        src: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Sashimi_-_Maguro_Restaurant%2C_Bangna%2C_Bangkok_%2844856596864%29.jpg",
-        alt: "Salmon_Sushi.jpg"
-      },
-      // {
-      //   src: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Beef_curry_rice_003.jpg",
-      //   alt: "Japanese_Curry.jpg",
-     // },
-      // {
-      //   src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Shoyu_ramen%2C_at_Kasukabe_Station_%282014.05.05%29_1.jpg",
-      //   alt:  "Ramen.jpg",
-      // },
-     //  {
-     //    src: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Sashimi_-_Maguro_Restaurant%2C_Bangna%2C_Bangkok_%2844856596864%29.jpg",
-     //    alt: "Salmon_Sushi.jpg"
-     //  },
-
-     ],
-    Comments: [
-      {
-        id: 1,
-        content: "Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10 minutes.",
-        createdAt: "",
-        User: {
-          id: 2,
-          username: "Mary S Bing"
-        },
-      },
-      {
-        id: 2,
-        content: "Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken and chorizo.",
-        createdAt: "",
-        User: {
-          id: 3,
-          username: "Rose A Kramer"
-
-        },
-      },
-      {
-        id: 3,
-        content: "Add rice and stir very gently to distribute. Top with artichokes andpeppers, and cook without stirring, until most of the liquid is absorbed,15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp andmussels, tucking them down into the rice, and cook again.",
-        createdAt: "",
-        User: {
-          id: 4,
-          username: "Joy T Jones"
-
-        },
-      },
-    ]
-  }],
+  mainPosts: [],
   imagePaths: [
       {
     src: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Beef_curry_rice_003.jpg",
@@ -263,7 +193,7 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
   }
 })
 
-export const getDummyPosts = (number) => Array(number).fill().map((post) => ({
+export const getDummyPosts = (number) => Array(number).fill().map((post, index) => ({
    id: shortId.generate(),
    content: faker.lorem.paragraphs(2),
    createdAt: `${faker.date.past(10)}`.substring(0,24),
@@ -272,26 +202,39 @@ export const getDummyPosts = (number) => Array(number).fill().map((post) => ({
      username: faker.name.fullName()
    },
   Images: [{
-    src: `${faker.image.cats()}?random=${Date.now()}`,
+    src: `${faker.image.cats()}?random=${Date.now()+index}`,
     alt: "cat"
   }],
   Comments: [],
 }))
 
-export const getSingleDummyPost = (action, id) => ({
+export const postMyDummyPost = (action, id) => ({
   id,
   content: faker.lorem.paragraphs(2),
   createdAt: `${faker.date.past(10)}`.substring(0,24),
   User: {
     id: action.data.userId,
-    username: faker.name.fullName()
+    username: action.data.User.username
   },
   Images: Array(Math.floor(Math.random()*4)+1).fill().map((image, index)=>({
     src: `${faker.image.cats()}?random=${Date.now()+index}`,
-    alt: "cat"
+    alt: `Cat_0${index}`
   })),
   Comments: []
 })
+
+export const postMyDummyComment = (action, id) => ({
+  id,
+  postId: action.data.postId,
+  content: faker.lorem.sentences(2),
+  createdAt: `${faker.date.past(5)}`.substring(0,24),
+  User: {
+    id: action.data.userId,
+    username: action.data.User.username
+  },
+})
+
+export default reducer;
 
 export const dummyPost = {
   id: 2,
@@ -330,15 +273,74 @@ export const dummyPost = {
   // ]
 }
 
-export const getDummyComment = (action, id) => ({
-  id,
-  postId: action.data.postId,
-  content: faker.lorem.sentences(2),
-  createdAt: `${faker.date.past(5)}`.substring(0,24),
-  User: {
-    id: action.data.userId,
-    username: faker.name.fullName()
-  },
-})
-
-export default reducer;
+// mainPosts: [{
+//   id: 1,
+//   content: "This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of frozen peas along with the mussels, if you like. #paella #meal",
+//   createdAt: "September 14, 2016",
+//   User: {
+//     id: 1,
+//     username: "Shrimp and Chorizo Paella"
+//   },
+//   Likers: [
+//     {
+//       id: 2
+//     },
+//     {
+//       id: 3
+//     },
+//     {
+//       id: 4
+//     },
+//   ],
+//   RetweetId: null,
+//   Retweet: null,
+//   Images: [{
+//       src: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Sashimi_-_Maguro_Restaurant%2C_Bangna%2C_Bangkok_%2844856596864%29.jpg",
+//       alt: "Salmon_Sushi.jpg"
+//     },
+//     // {
+//     //   src: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Beef_curry_rice_003.jpg",
+//     //   alt: "Japanese_Curry.jpg",
+//    // },
+//     // {
+//     //   src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Shoyu_ramen%2C_at_Kasukabe_Station_%282014.05.05%29_1.jpg",
+//     //   alt:  "Ramen.jpg",
+//     // },
+//    //  {
+//    //    src: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Sashimi_-_Maguro_Restaurant%2C_Bangna%2C_Bangkok_%2844856596864%29.jpg",
+//    //    alt: "Salmon_Sushi.jpg"
+//    //  },
+//
+//    ],
+//   Comments: [
+//     {
+//       id: 1,
+//       content: "Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10 minutes.",
+//       createdAt: "",
+//       User: {
+//         id: 2,
+//         username: "Mary S Bing"
+//       },
+//     },
+//     {
+//       id: 2,
+//       content: "Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet over medium-high heat. Add chicken, shrimp and chorizo, and cook, stirring occasionally until lightly browned, 6 to 8 minutes. Transfer shrimp to a large plate and set aside, leaving chicken and chorizo.",
+//       createdAt: "",
+//       User: {
+//         id: 3,
+//         username: "Rose A Kramer"
+//
+//       },
+//     },
+//     {
+//       id: 3,
+//       content: "Add rice and stir very gently to distribute. Top with artichokes andpeppers, and cook without stirring, until most of the liquid is absorbed,15 to 18 minutes. Reduce heat to medium-low, add reserved shrimp andmussels, tucking them down into the rice, and cook again.",
+//       createdAt: "",
+//       User: {
+//         id: 4,
+//         username: "Joy T Jones"
+//
+//       },
+//     },
+//   ]
+// }],
