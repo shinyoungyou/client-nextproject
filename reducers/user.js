@@ -1,5 +1,8 @@
 import produce from 'immer';
 
+import shortId from 'shortid';
+import { faker } from '@faker-js/faker/locale/en_CA';
+
 export const initialState = {
   logInLoading: false,
   logInDone: false,
@@ -211,16 +214,14 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
   }
 })
 
-export const dummyMy =  {
-  id: 1,
-  username: "Shrimp and Chorizo Paella",
-  email: "shrimp@gmail.com",
-  pass: "test1",
+export const dummyMy = {
+  id: shortId.generate(),
+  username: faker.name.fullName(),
+  email: faker.internet.email(),
+  pass: faker.internet.password(),
   Followings: null,
   Followers: null,
-  Posts: [{
-    id: 1,
-  }]
+  Posts: []
 }
 
 export default reducer;
