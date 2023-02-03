@@ -79,6 +79,7 @@ function* follow(action) {
   try{
     yield put({
       type: FOLLOW_SUCCESS,
+      data: action.data
     })
   } catch (err) {
     console.error(err);
@@ -98,6 +99,7 @@ function* unfollow(action) {
   try{
     yield put({
       type: UNFOLLOW_SUCCESS,
+      data: action.data
     })
   } catch (err) {
     console.error(err);

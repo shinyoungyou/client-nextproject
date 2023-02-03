@@ -1,8 +1,13 @@
+import { useSelector, useDispatch } from "react-redux";
+import { unfollowRequestAction } from "../reducers/user";
+
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ListSubheader, List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Button, Avatar } from '@mui/material';
 
 const FollowList = ({ header }) => {
+  const { Followings } = useSelector((state)=>state.user.my);
+  const dispatch = useDispatch();
   const [checked, setChecked] = useState([1]);
   const [targetIndex, setTargetIndex] = useState(-1);
 
@@ -19,6 +24,10 @@ const FollowList = ({ header }) => {
     setChecked(newChecked);
   };
 
+  const handleUnfollow = (id) => {
+    dispatch(unfollowRequestAction(id));
+  }
+
   return (
     <List 
       dense 
@@ -29,14 +38,15 @@ const FollowList = ({ header }) => {
         </ListSubheader>
       }
     >
-      {[0, 1, 2, 3, 4].map((value, index) => {
+      {Followings.map((user, index) => {
         const labelId = `error`;
         return (
           <ListItem
-            key={value}
+            key={user.id}
             secondaryAction={
             <Button 
-              variant="outlined" 
+              variant="outlined"
+              onClick={()=>handleUnfollow(user.id)}
               onMouseEnter={()=>setTargetIndex(index)}
               onMouseLeave={()=>setTargetIndex(-1)}
               sx={{
@@ -54,11 +64,11 @@ const FollowList = ({ header }) => {
             <ListItemButton>
               <ListItemAvatar>
                 <Avatar
-                  alt={`Avatar n°${value + 1}`}
-                  src={`/static/images/avatar/${value + 1}.jpg`}
+                  alt={user.username}
+                  src="/static/images/avatar/1.jpg"
                 />
               </ListItemAvatar>
-              <ListItemText id={labelId} primary={`Lila R. Mabry ${value + 1}`} />
+              <ListItemText id={labelId} primary={user.username} />
             </ListItemButton>
           </ListItem>
         );

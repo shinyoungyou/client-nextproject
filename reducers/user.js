@@ -22,6 +22,7 @@ export const initialState = {
   changeNicknameLoading: false,
   changeNicknameDone: false,
   changeNicknameError: null,
+  navigateProfile: 0,
   my: null,
   User: [
     {
@@ -89,6 +90,9 @@ export const CHANGE_NICKNAME_FAILURE = 'CHANGE_NICKNAME_FAILURE';
 
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
+
+export const NAVIGATE_PROFILE = 'NAVIGATE_PROFILE';
+
 export const loginRequestAction = (data) => {
   return {
     type: LOG_IN_REQUEST,
@@ -117,6 +121,13 @@ export const followRequestAction = (data) => {
 export const unfollowRequestAction = (data) => {
   return {
     type: UNFOLLOW_REQUEST,
+    data
+  }
+}
+
+export const navigateProfileAction = (data) => {
+  return {
+    type: NAVIGATE_PROFILE,
     data
   }
 }
@@ -170,6 +181,7 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
       draft.followError = null;
       break;
     case FOLLOW_SUCCESS:
+      draft.my.Followings.unshift({ id: action.data.id, username: action.data.username });
       draft.followLoading = false;
       draft.followDone = true;
       break;
@@ -183,6 +195,7 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
       draft.unfollowError = null;
       break;
     case UNFOLLOW_SUCCESS:
+      draft.my.Followings = draft.my.Followings.filter((user) => user.id !== action.data);
       draft.unfollowLoading = false;
       draft.unfollowDone = true;
       break;
@@ -209,6 +222,9 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
     case REMOVE_POST_OF_ME:
       draft.my.Posts = draft.my.Posts.filter((post) => post.id !== action.data);
       break;
+    case NAVIGATE_PROFILE:
+      draft.navigateProfile = action.data
+      break;
     default:
       return state;
   }
@@ -219,8 +235,8 @@ export const dummyMy = {
   username: faker.name.fullName(),
   email: faker.internet.email(),
   pass: faker.internet.password(),
-  Followings: null,
-  Followers: null,
+  Followings: [],
+  Followers: [],
   Posts: []
 }
 
