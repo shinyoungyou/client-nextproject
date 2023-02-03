@@ -19,6 +19,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const CommentListItem = ({ comment }) => {
   const { removeCommentLoading } = useSelector((state) => state.post);
+  const { my } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -37,7 +38,7 @@ const CommentListItem = ({ comment }) => {
       <>
         <ListItem key={comment.id}
           secondaryAction={
-            <>
+            my && <>
               <Tooltip title="More">
                 <IconButton
                   aria-label="more"

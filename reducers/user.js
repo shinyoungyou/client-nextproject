@@ -154,8 +154,8 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
       draft.logOutError = null;
       break;
     case LOG_OUT_SUCCESS:
-      draft.logOutLoading = false;
       draft.my = null;
+      draft.logOutLoading = false;
       draft.logOutDone = true;
       break;
     case LOG_OUT_FAILURE:
