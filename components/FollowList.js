@@ -5,8 +5,7 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ListSubheader, List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Button, Avatar } from '@mui/material';
 
-const FollowList = ({ header }) => {
-  const { Followings } = useSelector((state)=>state.user.my);
+const FollowList = ({ header, item }) => {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState([1]);
   const [targetIndex, setTargetIndex] = useState(-1);
@@ -38,7 +37,7 @@ const FollowList = ({ header }) => {
         </ListSubheader>
       }
     >
-      {Followings.map((user, index) => {
+      {item?.length > 0 ? item.map((user, index) => {
         const labelId = `error`;
         return (
           <ListItem
@@ -72,7 +71,14 @@ const FollowList = ({ header }) => {
             </ListItemButton>
           </ListItem>
         );
-      })}
+      })
+      : <img
+        width="500px"
+        alt="No Following"
+        draggable="true"
+        src="https://abs.twimg.com/responsive-web/client-web/yellow-birds-power-line-800x400.v1.0891edb9.png"
+      />
+      }
     </List>
   );
 }

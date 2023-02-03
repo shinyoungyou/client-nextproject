@@ -54,11 +54,11 @@ const PostCard = ({ post }) => {
 
   const handleLikeButton = (post) => {
     if(!my) return alert("로그인이 필요합니다.");
-    if(!post.Likes.find((like) => like.userId == my.id)){
-      dispatch(likePostRequest({ postId: post.id, userId: my.id }));
-    }
     if(post.Likes.find((like) => like.userId == my.id)){
       dispatch(unlikePostRequest({ postId: post.id, userId: my.id }));
+    } else {
+      dispatch(likePostRequest({ postId: post.id, userId: my.id }));
+
     }
   }
 
