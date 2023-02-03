@@ -1,19 +1,11 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { followRequestAction, unfollowRequestAction } from "../reducers/user";
 import React, { useState } from "react";
 
 import { StyledMenu } from "../styles";
 import {
-  Avatar,
-  Divider,
-  IconButton,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Menu,
   MenuItem,
-  Tooltip
 } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -22,11 +14,19 @@ import FlagIcon from "@mui/icons-material/Flag";
 import {LoadingButton} from "@mui/lab";
 
 const MoreMenu = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoading }) => {
-  const my = useSelector((state) => state.user.my);
-
+  const { my, followLoading, unfollowLoading } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleFollow = (item) => {
+    dispatch(followRequestAction(item.User));
+  }
+
+  const handleUnfollow = (item) => {
+    dispatch(unfollowRequestAction(item.User.id));
+  }
 
   return (
       <StyledMenu
@@ -44,7 +44,7 @@ const MoreMenu = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoadi
             Edit
           </MenuItem>
           <MenuItem key="Delete" onClick={handleDelete} variant="soft" color="danger">
-            <LoadingButton loading={removeLoading} sx={{ p: 0, color: "inherit" }}>
+            <LoadingButton loading={removeLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit"  }}>
               <ListItemDecorator sx={{color: 'inherit'}}>
                 <DeleteIcon/>
               </ListItemDecorator>{' '}
@@ -52,10 +52,26 @@ const MoreMenu = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoadi
             </LoadingButton>
           </MenuItem>
         </> : <>
-          <MenuItem key="Follow" onClick={handleClose} disableRipple>
-            <PersonAddAltRoundedIcon/>
-            Follow
-          </MenuItem>
+          {my?.Followings.find((user)=> user.id == item.User.id)
+              ?
+              <MenuItem key="Unfollow" onClick={()=>handleUnfollow(item)} disableRipple>
+                <LoadingButton loading={unfollowLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit" }}>
+                  <ListItemDecorator sx={{color: 'inherit'}}>
+                    <PersonAddAltRoundedIcon/>
+                  </ListItemDecorator>{' '}
+                  Unfollow
+                </LoadingButton>
+              </MenuItem>
+              :
+              <MenuItem key="Follow" onClick={()=>handleFollow(item)} disableRipple>
+                <LoadingButton loading={followLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit" }}>
+                  <ListItemDecorator sx={{color: 'inherit'}}>
+                    <PersonAddAltRoundedIcon/>
+                  </ListItemDecorator>{' '}
+                  Follow
+                </LoadingButton>
+              </MenuItem>
+          }
           <MenuItem key="Report" onClick={handleClose} disableRipple>
             <FlagIcon/>
             Report
