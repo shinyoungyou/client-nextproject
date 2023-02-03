@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { removePostRequest } from '../reducers/post'
+import { removePostRequest, likePostRequest, unlikePostRequest } from '../reducers/post'
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
@@ -27,12 +27,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
-import EditIcon from "@mui/icons-material/Edit";
-import ListItemDecorator from "@mui/joy/ListItemDecorator";
-import DeleteIcon from "@mui/icons-material/Delete";
-import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
-import FlagIcon from "@mui/icons-material/Flag";
-import { LoadingButton } from '@mui/lab';
 import MoreMenu from "./MoreMenu";
 
 const PostCard = ({ post }) => {
@@ -58,6 +52,16 @@ const PostCard = ({ post }) => {
     dispatch(removePostRequest(post.id));
   }
 
+  const handleLikeButton = (post) => {
+    if(!my) return alert("로그인이 필요합니다.");
+    if(!post.Likes.find((like) => like.userId == my.id)){
+      dispatch(likePostRequest({ postId: post.id, userId: my.id }));
+    }
+    if(post.Likes.find((like) => like.userId == my.id)){
+      dispatch(unlikePostRequest({ postId: post.id, userId: my.id }));
+    }
+  }
+
   return (<Card sx={{m: 1, mb: 3}}>
     <CardHeader
         avatar={
@@ -67,7 +71,7 @@ const PostCard = ({ post }) => {
               sx={{ bgcolor: blue[500] }}
           />
         }
-        action={<>
+        action={my && <>
           <Tooltip title="More">
             <IconButton
                 aria-label="more"
@@ -101,9 +105,12 @@ const PostCard = ({ post }) => {
       </Typography>
     </CardContent>
     <CardActions disableSpacing>
-      <Tooltip title="Like">
-        <IconButton aria-label="add to favorites">
-          <FavoriteBorderIcon/>
+      <Tooltip title={post.Likes.find((like) => like.userId == my.id) ? "Unlike": "Like"}>
+        <IconButton onClick={()=>handleLikeButton(post)} aria-label="add to favorites" sx={{ py: 0, fontSize: "inherit", "&:hover": { color: "#F91880", bgcolor: 'transparent' } }}>
+          <IconButton  sx={{ color: "inherit", "&:hover": { bgcolor: 'rgba(249, 24, 128, 0.1)' } }}>
+            <FavoriteBorderIcon/>
+          </IconButton>
+          {post.Likes?.length > 0 ? post.Likes.length : 0}
         </IconButton>
       </Tooltip>
       <Tooltip title="Retweet">
@@ -140,11 +147,12 @@ const PostCard = ({ post }) => {
 
 PostCard.propTypes = {
   post: PropTypes.shape({
-    id: PropTypes.number,
+    // id: PropTypes.number,
+    id: PropTypes.string,
     content: PropTypes.string,
     createdAt: PropTypes.string,
     User: PropTypes.object,
-    Likers: PropTypes.arrayOf(PropTypes.object),
+    Likes: PropTypes.arrayOf(PropTypes.object),
     RetweetId: PropTypes.number,
     Retweet: PropTypes.object,
     Images: PropTypes.arrayOf(PropTypes.object),

@@ -20,6 +20,12 @@ export const initialState = {
   removeCommentLoading: false,
   removeCommentDone: false,
   removeCommentError: null,
+  likePostLoading: false,
+  likePostDone: false,
+  likePostError: null,
+  unlikePostLoading: false,
+  unlikePostDone: false,
+  unlikePostError: null,
   mainPosts: [],
   imagePaths: [
       {
@@ -65,6 +71,14 @@ export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
 export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
 export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
+
+export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
+export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
+
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
@@ -108,6 +122,21 @@ export const addCommentRequest = (data) => {
 export const removeCommentRequest = (data) => {
   return {
     type: REMOVE_COMMENT_REQUEST,
+    data
+  }
+}
+
+
+export const likePostRequest = (data) => {
+  return {
+    type: LIKE_POST_REQUEST,
+    data
+  }
+}
+
+export const unlikePostRequest = (data) => {
+  return {
+    type: UNLIKE_POST_REQUEST,
     data
   }
 }
@@ -178,7 +207,6 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
       draft.removeCommentError = null;
       break;
     case REMOVE_COMMENT_SUCCESS:
-      console.log(action.data)
       const removeCommentOfPost = draft.mainPosts.find((post) => post.id === action.data.postId);
       removeCommentOfPost.Comments = removeCommentOfPost.Comments.filter((comment) => comment.id !== action.data.id);
       draft.removeCommentLoading = false;
@@ -187,6 +215,36 @@ const reducer = (state = initialState, action) => produce(state, (draft)=>{
     case REMOVE_COMMENT_FAILURE:
       draft.removeCommentLoading = false;
       draft.removeCommentError = action.error;
+      break;
+    case LIKE_POST_REQUEST:
+      draft.likePostLoading = true;
+      draft.likePostDone = false;
+      draft.likePostError = null;
+      break;
+    case LIKE_POST_SUCCESS:
+      const likeToPost = draft.mainPosts.find((post) => post.id === action.data.postId);
+      likeToPost.Likes.unshift(action.data);
+      draft.likePostLoading = false;
+      draft.likePostDone = true;
+      break;
+    case LIKE_POST_FAILURE:
+      draft.likePostLoading = false;
+      draft.likePostError = action.error;
+      break;
+    case UNLIKE_POST_REQUEST:
+      draft.unlikePostLoading = true;
+      draft.unlikePostDone = false;
+      draft.unlikePostError = null;
+      break;
+    case UNLIKE_POST_SUCCESS:
+      const unlikeOfPost = draft.mainPosts.find((post) => post.id === action.data.postId);
+      unlikeOfPost.Likes = unlikeOfPost.Likes.filter((like) => like.userId !== action.data.userId);
+      draft.unlikePostLoading = false;
+      draft.unlikePostDone = true;
+      break;
+    case UNLIKE_POST_FAILURE:
+      draft.unlikePostLoading = false;
+      draft.unlikePostError = action.error;
       break;
     default:
       break;
@@ -206,6 +264,7 @@ export const getDummyPosts = (number) => Array(number).fill().map((post, index) 
     alt: "cat"
   }],
   Comments: [],
+  Likes: []
 }))
 
 export const postMyDummyPost = (action, id) => ({
@@ -220,7 +279,8 @@ export const postMyDummyPost = (action, id) => ({
     src: `${faker.image.cats()}?random=${Date.now()+index}`,
     alt: `Cat_0${index}`
   })),
-  Comments: []
+  Comments: [],
+  Likes: []
 })
 
 export const postMyDummyComment = (action, id) => ({
