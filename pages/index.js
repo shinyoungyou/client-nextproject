@@ -11,7 +11,9 @@ const Home = () => {
   const dispatch = useDispatch();
 
   useEffect(()=>{
-    dispatch(loadPostsRequest());
+    if(mainPosts.length < 10){
+      dispatch(loadPostsRequest());
+    }
   }, [])
 
   useEffect(()=>{
