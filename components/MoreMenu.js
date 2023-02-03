@@ -20,12 +20,14 @@ const MoreMenu = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoadi
     setAnchorEl(null);
   };
 
-  const handleFollow = (item) => {
-    dispatch(followRequestAction(item.User));
-  }
+  const isFollowing = my?.Followings.find((user)=> user.id == item.User.id);
 
-  const handleUnfollow = (item) => {
-    dispatch(unfollowRequestAction(item.User.id));
+  const handleFollowing = (item) => {
+    if(isFollowing){
+      dispatch(unfollowRequestAction(item.User.id));
+    } else {
+      dispatch(followRequestAction(item.User));
+    }
   }
 
   return (
@@ -52,26 +54,14 @@ const MoreMenu = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoadi
             </LoadingButton>
           </MenuItem>
         </> : <>
-          {my?.Followings.find((user)=> user.id == item.User.id)
-              ?
-              <MenuItem key="Unfollow" onClick={()=>handleUnfollow(item)} disableRipple>
-                <LoadingButton loading={unfollowLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit" }}>
-                  <ListItemDecorator sx={{color: 'inherit'}}>
-                    <PersonAddAltRoundedIcon/>
-                  </ListItemDecorator>{' '}
-                  Unfollow
-                </LoadingButton>
-              </MenuItem>
-              :
-              <MenuItem key="Follow" onClick={()=>handleFollow(item)} disableRipple>
-                <LoadingButton loading={followLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit" }}>
-                  <ListItemDecorator sx={{color: 'inherit'}}>
-                    <PersonAddAltRoundedIcon/>
-                  </ListItemDecorator>{' '}
-                  Follow
-                </LoadingButton>
-              </MenuItem>
-          }
+          <MenuItem key={isFollowing ?"Unfollow" : "Follow"} onClick={()=>handleFollowing(item)} disableRipple>
+            <LoadingButton loading={isFollowing ? unfollowLoading : followLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit" }}>
+              <ListItemDecorator sx={{color: 'inherit'}}>
+                <PersonAddAltRoundedIcon/>
+              </ListItemDecorator>{' '}
+              {isFollowing ? "Unfollow" : "Follow"}
+            </LoadingButton>
+          </MenuItem>
           <MenuItem key="Report" onClick={handleClose} disableRipple>
             <FlagIcon/>
             Report

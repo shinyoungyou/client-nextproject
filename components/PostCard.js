@@ -52,9 +52,10 @@ const PostCard = ({ post }) => {
     dispatch(removePostRequest(post.id));
   }
 
+  const isLiked = post.Likes.find((like) => like.userId == my.id);
   const handleLikeButton = (post) => {
     if(!my) return alert("로그인이 필요합니다.");
-    if(post.Likes.find((like) => like.userId == my.id)){
+    if(isLiked){
       dispatch(unlikePostRequest({ postId: post.id, userId: my.id }));
     } else {
       dispatch(likePostRequest({ postId: post.id, userId: my.id }));
@@ -105,7 +106,7 @@ const PostCard = ({ post }) => {
       </Typography>
     </CardContent>
     <CardActions disableSpacing>
-      <Tooltip title={post.Likes.find((like) => like.userId == my.id) ? "Unlike": "Like"}>
+      <Tooltip title={isLiked ? "Unlike": "Like"}>
         <IconButton onClick={()=>handleLikeButton(post)} aria-label="add to favorites" sx={{ py: 0, fontSize: "inherit", "&:hover": { color: "#F91880", bgcolor: 'transparent' } }}>
           <IconButton  sx={{ color: "inherit", "&:hover": { bgcolor: 'rgba(249, 24, 128, 0.1)' } }}>
             <FavoriteBorderIcon/>
