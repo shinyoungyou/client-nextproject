@@ -5,9 +5,9 @@ import RootState from "../store/state-types";
 import { Post } from '../store/state-types/post';
 
 import MoreMenu from "./MoreMenu";
-import PostImages from '../components/PostImages'
-import CommentForm from '../components/CommentForm';
-import CommentListItem from '../components/CommentListItem';
+import PostImages from './PostImages'
+import CommentForm from './CommentForm';
+import CommentListItem from './CommentListItem';
 import { ExpandMore } from "../styles";
 
 import {

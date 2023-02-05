@@ -1,6 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { removeCommentRequest } from "../store/action-creators/post";
-import { useState } from "react";
+import React, { useState, MouseEvent, BaseSyntheticEvent } from "react";
+import RootState from "../store/state-types";
+import { Comment } from '../store/state-types/post';
+
 import MoreMenu from './MoreMenu';
 
 import {
@@ -14,16 +17,20 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-const CommentListItem = ({ comment }) => {
-  const { removeCommentLoading } = useSelector((state) => state.post);
-  const { my } = useSelector((state) => state.user);
+interface CommentListItemProps {
+  comment: Comment
+}
+
+const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
+  const { removeCommentLoading } = useSelector((state: RootState) => state.post);
+  const { my } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
 
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState<BaseSyntheticEvent["currentTarget"]>(null);
 
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
