@@ -1,12 +1,10 @@
 import { all, fork, takeLatest, put, call, delay } from 'redux-saga/effects';
-import {
-  LOG_IN_REQUEST, LOG_IN_SUCCESS, LOG_IN_FAILURE, dummyMy,
-  LOG_OUT_REQUEST, LOG_OUT_SUCCESS, LOG_OUT_FAILURE,
-  SIGN_UP_REQUEST, SIGN_UP_SUCCESS, SIGN_UP_FAILURE,
-  FOLLOW_REQUEST, FOLLOW_SUCCESS, FOLLOW_FAILURE,
-  UNFOLLOW_REQUEST, UNFOLLOW_SUCCESS, UNFOLLOW_FAILURE,
-  CHANGE_NICKNAME_REQUEST, CHANGE_NICKNAME_SUCCESS, CHANGE_NICKNAME_FAILURE
-} from "../reducers/user";
+import { dummyMy } from "../reducers/user";
+
+import { LogInActionType, LogOutActionType, SignUpActionType,
+  FollowActionType, UnfollowActionType, ChangeNicknameActionType,
+} from '../action-types/user';
+
 import axios from 'axios';
 
 function logInAPI(data) {
@@ -18,14 +16,14 @@ function* logIn(action) {
   try{
     console.log('saga login');
     yield put({
-      type: LOG_IN_SUCCESS,
+      type: LogInActionType.LOG_IN_SUCCESS,
       data: dummyMy
     })
   }
   catch(err) {
     console.error(err);
     put({
-      type: LOG_IN_FAILURE,
+      type: LogInActionType.LOG_IN_FAILURE,
       error: err.response.data,
     })
   }
@@ -40,12 +38,12 @@ function* logOut() {
   console.log('saga logout');
   try{
     yield put({
-      type: LOG_OUT_SUCCESS,
+      type: LogOutActionType.LOG_OUT_SUCCESS,
     })
   } catch (err) {
     console.error(err);
     put({
-      type: LOG_OUT_FAILURE,
+      type: LogOutActionType.LOG_OUT_FAILURE,
       error: err.response.data,
     })
   }
@@ -59,12 +57,12 @@ function* signUp(action) {
   yield delay(1000);
   try{
     yield put({
-      type: SIGN_UP_SUCCESS,
+      type: SignUpActionType.SIGN_UP_SUCCESS,
     })
   } catch (err) {
     console.error(err);
     put({
-      type: SIGN_UP_FAILURE,
+      type: SignUpActionType.SIGN_UP_FAILURE,
       error: err.response.data,
     })
   }
@@ -78,13 +76,13 @@ function* follow(action) {
   yield delay(1000);
   try{
     yield put({
-      type: FOLLOW_SUCCESS,
+      type: FollowActionType.FOLLOW_SUCCESS,
       data: action.data
     })
   } catch (err) {
     console.error(err);
     put({
-      type: FOLLOW_FAILURE,
+      type: FollowActionType.FOLLOW_FAILURE,
       error: err.response.data,
     })
   }
@@ -98,13 +96,13 @@ function* unfollow(action) {
   yield delay(1000);
   try{
     yield put({
-      type: UNFOLLOW_SUCCESS,
+      type: UnfollowActionType.UNFOLLOW_SUCCESS,
       data: action.data
     })
   } catch (err) {
     console.error(err);
     put({
-      type: UNFOLLOW_FAILURE,
+      type: UnfollowActionType.UNFOLLOW_FAILURE,
       error: err.response.data,
     })
   }
@@ -118,39 +116,39 @@ function* changeNickname(action) {
   yield delay(1000);
   try{
     yield put({
-      type: CHANGE_NICKNAME_SUCCESS,
+      type: ChangeNicknameActionType.CHANGE_NICKNAME_SUCCESS,
     })
   } catch (err) {
     console.error(err);
     put({
-      type: CHANGE_NICKNAME_FAILURE,
+      type: ChangeNicknameActionType.CHANGE_NICKNAME_FAILURE,
       error: err.response.data,
     })
   }
 }
 
 function* watchLogIn() {
-  yield takeLatest(LOG_IN_REQUEST, logIn);
+  yield takeLatest(LogInActionType.LOG_IN_REQUEST, logIn);
 }
 
 function* watchLogOut() {
-  yield takeLatest(LOG_OUT_REQUEST, logOut);
+  yield takeLatest(LogOutActionType.LOG_OUT_REQUEST, logOut);
 }
 
 function* watchSignUp() {
-  yield takeLatest(SIGN_UP_REQUEST, signUp);
+  yield takeLatest(SignUpActionType.SIGN_UP_REQUEST, signUp);
 }
 
 function* watchFollow() {
-  yield takeLatest(FOLLOW_REQUEST, follow);
+  yield takeLatest(FollowActionType.FOLLOW_REQUEST, follow);
 }
 
 function* watchUnfollow() {
-  yield takeLatest(UNFOLLOW_REQUEST, unfollow);
+  yield takeLatest(UnfollowActionType.UNFOLLOW_REQUEST, unfollow);
 }
 
 function* watchChangeNickname() {
-  yield takeLatest(CHANGE_NICKNAME_REQUEST, changeNickname);
+  yield takeLatest(ChangeNicknameActionType.CHANGE_NICKNAME_REQUEST, changeNickname);
 }
 
 export default function* userSaga() {
