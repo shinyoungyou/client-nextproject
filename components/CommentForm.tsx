@@ -1,14 +1,21 @@
-import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { addCommentRequest } from '../store/action-creators/post';
+import React, { useState, useEffect, FormEvent } from 'react';
+import RootState from "../store/state-types";
+import { Post } from "../store/state-types/post";
+import { User } from "../store/state-types/user";
 
 import { Box, IconButton, Textarea, Typography } from '@mui/joy';
 import Tooltip from '@mui/material/Tooltip';
 import { LoadingButton } from '@mui/lab';
 
-const CommentForm = ({ post }) => {
-  const { my } = useSelector((state)=>state.user);
-  const { addCommentLoading, addCommentDone } = useSelector((state)=>state.post);
+interface CommentFormProps {
+  post: Post
+}
+
+const CommentForm: React.FC<CommentFormProps> = ({ post }) => {
+  const { my } = useSelector((state: RootState)=>state.user);
+  const { addCommentLoading, addCommentDone } = useSelector((state: RootState)=>state.post);
   const dispatch = useDispatch();
   const [text, setText] = useState('');
 
@@ -19,10 +26,10 @@ const CommentForm = ({ post }) => {
   }, [addCommentDone])
 
 
-  const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
-  const handleSubmit = (e) => {
+  const addEmoji = (emoji: string) => () => setText(`${text}${emoji}`);
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addCommentRequest({ content: text, postId: post.id, userId: my.id, User: my }));
+    dispatch(addCommentRequest({ content: text, postId: post.id, userId: my?.id as number | string, User: my as User  }));
   }
   return (
       <Box sx={{ m: 1 }}>
