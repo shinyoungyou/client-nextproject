@@ -1,6 +1,33 @@
-import User from './user';
+import { User } from './user';
 
-export default interface Post {
+export default interface PostState {
+    bringMorePosts: boolean,
+    loadPostsLoading: boolean,
+    loadPostsDone: boolean,
+    loadPostsError: ErrorEvent | null,
+    addPostLoading: boolean,
+    addPostDone: boolean,
+    addPostError: ErrorEvent | null,
+    removePostLoading: boolean,
+    removePostDone: boolean,
+    removePostError: ErrorEvent | null,
+    addCommentLoading: boolean,
+    addCommentDone: boolean,
+    addCommentError: ErrorEvent | null,
+    removeCommentLoading: boolean,
+    removeCommentDone: boolean,
+    removeCommentError: ErrorEvent | null,
+    likePostLoading: boolean,
+    likePostDone: boolean,
+    likePostError: ErrorEvent | null,
+    unlikePostLoading: boolean,
+    unlikePostDone: boolean,
+    unlikePostError: ErrorEvent | null,
+    mainPosts: Post[],
+    imagePaths: ImagePath[]
+}
+
+export interface Post {
     id: string;
     content: string;
     createdAt: string;
@@ -27,4 +54,9 @@ export interface Comment {
 export interface Image {
     src: string;
     alt: string;
+}
+
+export interface ImagePath {
+    src: string,
+    file: File
 }

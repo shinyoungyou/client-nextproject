@@ -8,7 +8,7 @@ import {
     UnfollowActionType,
     NavigateProfileActionType,
 } from "../action-types/user";
-import User from "../state-types/user";
+import { User } from "../state-types/user";
 
 export interface LoginRequestAction extends Action {
   type: LogInActionType.LOG_IN_REQUEST,

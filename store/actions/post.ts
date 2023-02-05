@@ -9,7 +9,7 @@ import {
     LikePostActionType,
     UnlikePostActionType
 } from "../action-types/post";
-import User from '../state-types/user';
+import { User } from '../state-types/user';
 import { Comment } from '../state-types/post';
 
 export interface loadPostsRequestAction extends Action {
