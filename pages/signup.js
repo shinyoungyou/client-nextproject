@@ -1,20 +1,16 @@
 import Head from "next/head";
 import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { signupRequestAction } from '../reducers/user';
+import { signupRequest } from '../store/action-creators/user';
 import AppLayout from '../components/AppLayout';
 
-import Link from 'next/link';
 import {
   Box,
   IconButton,
   OutlinedInput,
   InputLabel,
   InputAdornment,
-  FormGroup,
   FormControl,
-  ButtonGroup,
-  Button,
   FormControlLabel,
   Checkbox,
   Alert
@@ -89,10 +85,10 @@ const Signup = () => {
     }
 
     // send req first,
-    dispatch(signupRequestAction({ email, username, pass }));
+    dispatch(signupRequest({ email, username, pass }));
     console.log("fake req");
     console.log(email, username, pass);
-    // and then initializem, but do not here
+    // and then initialize, but do not here
   }, [form]);
 
   return (
