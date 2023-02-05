@@ -1,12 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { removePostRequest, likePostRequest, unlikePostRequest } from '../reducers/post'
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { removePostRequest, likePostRequest, unlikePostRequest } from '../store/action-creators/post'
+import React, { useState, MouseEvent, BaseSyntheticEvent } from 'react';
+import RootState from "../store/state-types";
+import { Post } from '../store/state-types/post';
 
+import MoreMenu from "./MoreMenu";
 import PostImages from '../components/PostImages'
 import CommentForm from '../components/CommentForm';
 import CommentListItem from '../components/CommentListItem';
-import {StyledMenu, ExpandMore} from "../styles";
+import { ExpandMore } from "../styles";
 
 import {
   Card,
@@ -19,19 +21,22 @@ import {
   Typography,
   List,
   ListSubheader,
-  MenuItem,
   Tooltip
 } from '@mui/material';
-import {blue} from '@mui/material/colors';
+import { blue } from '@mui/material/colors';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import RepeatIcon from '@mui/icons-material/Repeat';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
-import MoreMenu from "./MoreMenu";
 
-const PostCard = ({ post }) => {
-  const my = useSelector((state) => state.user.my);
-  const { removePostLoading } = useSelector((state) => state.post);
+interface PostCardProps {
+  post: Post
+}
+
+
+const PostCard: React.FC<PostCardProps> = ({ post }) => {
+  const my = useSelector((state: RootState) => state.user.my);
+  const { removePostLoading } = useSelector((state: RootState) => state.post);
   const dispatch = useDispatch();
 
   const [expanded, setExpanded] = useState(false);
@@ -40,11 +45,12 @@ const PostCard = ({ post }) => {
     setExpanded(!expanded);
   };
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState<BaseSyntheticEvent["currentTarget"]>(null);
 
   const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
+  // MouseEvent<HTMLButtonElement, MouseEvent>
+  // BaseSyntheticEvent<HTMLButtonElement>.currentTarget
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -52,8 +58,8 @@ const PostCard = ({ post }) => {
     dispatch(removePostRequest(post.id));
   }
 
-  const isLiked = post.Likes.find((like) => like.userId == my.id);
-  const handleLikeButton = (post) => {
+  const isLiked = post.Likes.find((like) => like.userId == my?.id);
+  const handleLikeButton = (post: Post) => {
     if(!my) return alert("로그인이 필요합니다.");
     if(isLiked){
       dispatch(unlikePostRequest({ postId: post.id, userId: my.id }));
@@ -144,21 +150,6 @@ const PostCard = ({ post }) => {
       </List>
     </Collapse>
   </Card>);
-}
-
-PostCard.propTypes = {
-  post: PropTypes.shape({
-    // id: PropTypes.number,
-    id: PropTypes.string,
-    content: PropTypes.string,
-    createdAt: PropTypes.string,
-    User: PropTypes.object,
-    Likes: PropTypes.arrayOf(PropTypes.object),
-    RetweetId: PropTypes.number,
-    Retweet: PropTypes.object,
-    Images: PropTypes.arrayOf(PropTypes.object),
-    Comments: PropTypes.arrayOf(PropTypes.object),
-  }).isRequired
 }
 
 export default PostCard;
