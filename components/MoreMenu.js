@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { followRequestAction, unfollowRequestAction } from "../reducers/user";
-import React, { useState } from "react";
+import { followRequest, unfollowRequest } from "../store/action-creators/user";
 
 import { StyledMenu } from "../styles";
 import {
@@ -24,9 +23,9 @@ const MoreMenu = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoadi
 
   const handleFollowing = (item) => {
     if(isFollowing){
-      dispatch(unfollowRequestAction(item.User.id));
+      dispatch(unfollowRequest(item.User.id));
     } else {
-      dispatch(followRequestAction(item.User));
+      dispatch(followRequest(item.User));
     }
   }
 

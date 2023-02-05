@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { loginRequestAction, dummyMy } from '../reducers/user';
+import { loginRequest } from '../store/action-creators/user';
 import Link from 'next/link';
 import {
   Box,
@@ -9,7 +9,6 @@ import {
   OutlinedInput,
   InputLabel,
   InputAdornment,
-  FormGroup,
   FormControl,
   ButtonGroup,
   Button
@@ -49,7 +48,7 @@ const LoginForm = () => {
 
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    dispatch(loginRequestAction(form));
+    dispatch(loginRequest(form));
   }, [form]);
 
   return (

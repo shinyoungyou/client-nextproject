@@ -1,5 +1,5 @@
-import { useSelector, useDispatch } from "react-redux";
-import { unfollowRequestAction } from "../reducers/user";
+import { useDispatch } from "react-redux";
+import { unfollowRequest } from "../store/action-creators/user";
 
 import { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -10,21 +10,8 @@ const FollowList = ({ header, item }) => {
   const [checked, setChecked] = useState([1]);
   const [targetIndex, setTargetIndex] = useState(-1);
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
-  };
-
   const handleUnfollow = (id) => {
-    dispatch(unfollowRequestAction(id));
+    dispatch(unfollowRequest(id));
   }
 
   return (
