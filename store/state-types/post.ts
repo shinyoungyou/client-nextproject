@@ -1,30 +1,30 @@
 import { User } from './user';
 
 export default interface PostState {
-    bringMorePosts: boolean,
-    loadPostsLoading: boolean,
-    loadPostsDone: boolean,
-    loadPostsError: ErrorEvent | null,
-    addPostLoading: boolean,
-    addPostDone: boolean,
-    addPostError: ErrorEvent | null,
-    removePostLoading: boolean,
-    removePostDone: boolean,
-    removePostError: ErrorEvent | null,
-    addCommentLoading: boolean,
-    addCommentDone: boolean,
-    addCommentError: ErrorEvent | null,
-    removeCommentLoading: boolean,
-    removeCommentDone: boolean,
-    removeCommentError: ErrorEvent | null,
-    likePostLoading: boolean,
-    likePostDone: boolean,
-    likePostError: ErrorEvent | null,
-    unlikePostLoading: boolean,
-    unlikePostDone: boolean,
-    unlikePostError: ErrorEvent | null,
-    mainPosts: Post[],
-    imagePaths: ImagePath[]
+    bringMorePosts: boolean;
+    loadPostsLoading: boolean;
+    loadPostsDone: boolean;
+    loadPostsError: ErrorEvent | null;
+    addPostLoading: boolean;
+    addPostDone: boolean;
+    addPostError: ErrorEvent | null;
+    removePostLoading: boolean;
+    removePostDone: boolean;
+    removePostError: ErrorEvent | null;
+    addCommentLoading: boolean;
+    addCommentDone: boolean;
+    addCommentError: ErrorEvent | null;
+    removeCommentLoading: boolean;
+    removeCommentDone: boolean;
+    removeCommentError: ErrorEvent | null;
+    likePostLoading: boolean;
+    likePostDone: boolean;
+    likePostError: ErrorEvent | null;
+    unlikePostLoading: boolean;
+    unlikePostDone: boolean;
+    unlikePostError: ErrorEvent | null;
+    mainPosts: Post[];
+    imagePaths: ImagePath[];
 }
 
 export interface Post {
@@ -57,6 +57,6 @@ export interface Image {
 }
 
 export interface ImagePath {
-    src: string,
-    file: File
+    src: string;
+    file: File | null;
 }

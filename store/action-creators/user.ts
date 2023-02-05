@@ -13,7 +13,7 @@ import {
   SignupRequestAction,
   UnfollowRequestAction
 } from "../actions/user";
-import User from "../types/user";
+import { User } from "../state-types/user";
 
 export const loginRequest = (form: { email: string, pass: string }): LoginRequestAction => {
   return {

@@ -13,8 +13,8 @@ import {
     loadPostsRequestAction, removeCommentRequestAction,
     removePostRequestAction, unlikePostRequestAction
 } from "../actions/post";
-import User from '../types/user';
-import { Comment } from '../types/post';
+import { User } from '../state-types/user';
+import { Comment } from '../state-types/post';
 
 export const loadPostsRequest: loadPostsRequestAction = {
   type: LoadPostsActionType.LOAD_POSTS_REQUEST,

@@ -1,16 +1,20 @@
 import { useDispatch } from "react-redux";
 import { unfollowRequest } from "../store/action-creators/user";
+import React, { useState } from 'react';
+import { User } from '../store/state-types/user';
 
-import { useState } from 'react';
-import PropTypes from 'prop-types';
 import { ListSubheader, List, ListItem, ListItemButton, ListItemText, ListItemAvatar, Button, Avatar } from '@mui/material';
 
-const FollowList = ({ header, item }) => {
+interface FollowListProps {
+  header: string;
+  item: User["Followings"] | User["Followers"];
+}
+const FollowList: React.FC<FollowListProps> = ({ header, item }) => {
   const dispatch = useDispatch();
   const [checked, setChecked] = useState([1]);
   const [targetIndex, setTargetIndex] = useState(-1);
 
-  const handleUnfollow = (id) => {
+  const handleUnfollow = (id: number | string) => {
     dispatch(unfollowRequest(id));
   }
 
@@ -32,7 +36,7 @@ const FollowList = ({ header, item }) => {
             secondaryAction={
             <Button 
               variant="outlined"
-              onClick={()=>handleUnfollow(user.id)}
+              onClick={()=>handleUnfollow(user.id as number | string)}
               onMouseEnter={()=>setTargetIndex(index)}
               onMouseLeave={()=>setTargetIndex(-1)}
               sx={{
@@ -68,10 +72,6 @@ const FollowList = ({ header, item }) => {
       }
     </List>
   );
-}
-
-FollowList.propTypes = {
-  header: PropTypes.string.isRequired
 }
 
 export default FollowList;
