@@ -1,8 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect, useCallback, MouseEvent, ChangeEvent, FormEvent } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { loginRequest } from '../store/action-creators/user';
 import Link from 'next/link';
+import RootState from "../store/state-types";
+
 import {
   Box,
   IconButton,
@@ -16,8 +17,8 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from '@mui/lab';
 
-const LoginForm = () => {
-  const { logInLoading, logInDone } = useSelector((state)=>state.user)
+const LoginForm: React.FC = () => {
+  const { logInLoading, logInDone } = useSelector((state: RootState)=>state.user)
   const dispatch = useDispatch();
   const [form, setForm] = useState({
     email: "",
@@ -36,17 +37,17 @@ const LoginForm = () => {
     }
   }, [logInDone])
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
+  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
-  const handleChange = useCallback((e) => {
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }, [form]);
 
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(loginRequest(form));
   }, [form]);
