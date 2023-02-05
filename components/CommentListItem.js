@@ -1,9 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removeCommentRequest } from "../reducers/post";
-import React, {useState} from "react";
+import { removeCommentRequest } from "../store/action-creators/post";
+import { useState } from "react";
 import MoreMenu from './MoreMenu';
 
-import {StyledMenu} from "../styles";
 import {
   Avatar,
   Divider,
@@ -11,8 +10,6 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Menu,
-  MenuItem,
   Tooltip
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -22,7 +19,7 @@ const CommentListItem = ({ comment }) => {
   const { my } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const open = Boolean(anchorEl);
 

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { addCommentRequest } from '../reducers/post';
+import { addCommentRequest } from '../store/action-creators/post';
 
 import { Box, IconButton, Textarea, Typography } from '@mui/joy';
 import Tooltip from '@mui/material/Tooltip';

@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { addPostRequest } from '../reducers/post';
+import { addPostRequest } from '../store/action-creators/post';
 
 import { Box, IconButton, Textarea, Typography } from '@mui/joy';
-import { Button, Input } from "@mui/material";
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
