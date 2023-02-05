@@ -1,15 +1,10 @@
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { logoutRequestAction, navigateProfileAction } from '../reducers/user';
-
-import { useState } from 'react';
+import { logoutRequest, navigateProfileActionCreator } from '../store/action-creators/user';
 import { useRouter } from 'next/router'
 
 import { Avatar, Box, Button, BottomNavigation, BottomNavigationAction, Card, CardHeader, CardContent, CardActions } from '@mui/material';
 import { blue } from '@mui/material/colors';
-import RestoreIcon from '@mui/icons-material/Restore';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { LoadingButton } from '@mui/lab';
 
 const UserProfile = () => {
@@ -18,7 +13,7 @@ const UserProfile = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    dispatch(logoutRequestAction);
+    dispatch(logoutRequest);
   }
 
   const RedirectToHome = () => {
@@ -45,7 +40,7 @@ const UserProfile = () => {
         showLabels
         value={navigateProfile}
         onChange={(event, newValue) => {
-          dispatch(navigateProfileAction(newValue));
+          dispatch(navigateProfileActionCreator(newValue));
         }}
       >
 
