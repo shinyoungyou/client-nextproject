@@ -1,14 +1,15 @@
-import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { logoutRequest, navigateProfileActionCreator } from '../store/action-creators/user';
 import { useRouter } from 'next/router'
+import React from 'react';
+import RootState from "../store/state-types";
 
 import { Avatar, Box, Button, BottomNavigation, BottomNavigationAction, Card, CardHeader, CardContent, CardActions } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { LoadingButton } from '@mui/lab';
 
-const UserProfile = () => {
-  const { my, logOutLoading, navigateProfile } = useSelector((state)=>state.user);
+const UserProfile: React.FC = () => {
+  const { my, logOutLoading, navigateProfile } = useSelector((state: RootState)=>state.user);
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -22,6 +23,8 @@ const UserProfile = () => {
   const RedirectToProfile = () => {
     router.push('/profile')
   }
+
+  if (!my) return null;
 
   return (
     <Card sx={{ maxWidth: 345, margin: '8px 0' }}>
