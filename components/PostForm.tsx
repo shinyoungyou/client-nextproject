@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { addPostRequest } from '../store/action-creators/post';
+import React, { useState, useEffect, FormEvent, ChangeEvent } from 'react';
+import RootState from "../store/state-types";
+import { ImagePath } from "../store/state-types/post";
+import { User } from "../store/state-types/user";
 
 import { Box, IconButton, Textarea, Typography } from '@mui/joy';
 import ImageOutlinedIcon from '@mui/icons-material/ImageOutlined';
@@ -11,13 +13,13 @@ import Tooltip from '@mui/material/Tooltip';
 import ClearRoundedIcon from '@mui/icons-material/ClearRounded';
 import { LoadingButton } from '@mui/lab';
 
-const PostForm = () => {
-  const { imagePaths, addPostLoading, addPostDone } = useSelector((state)=>state.post);
-  const { my } = useSelector((state)=>state.user);
+const PostForm: React.FC = () => {
+  const { imagePaths, addPostLoading, addPostDone } = useSelector((state: RootState)=>state.post);
+  const { my } = useSelector((state: RootState)=>state.user);
   const dispatch = useDispatch();
 
   const [text, setText] = useState('');
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState<ImagePath[] | []>([]);
 
   useEffect(()=>{
     if(addPostDone){
@@ -29,28 +31,32 @@ const PostForm = () => {
   useEffect(()=>{
     console.log(images);
   }, [images])
-  const addEmoji = (emoji) => () => setText(`${text}${emoji}`);
+  const addEmoji = (emoji: string) => () => setText(`${text}${emoji}`);
   // useEffect(()=>{
   //   console.log(targetIndex);
   //   setImages([images.filter((index) => index != targetIndex)]);
   // }, [targetIndex>-1])
-  const handleFileChange = (e) => {
+
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
-    for (let i = 0; i < files?.length; i++) {
-      const file = files[i];
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImages((prev) => [...prev, { src: reader.result, file } ])
-      };
-      reader.readAsDataURL(file);
+    if (files){
+      for (let i = 0; files?.length > i; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImages((prev) => [...prev, { src: reader.result as string, file } ])
+        };
+        reader.readAsDataURL(file);
+      }
     }
   }
-  const handleImageDelete = (index) => {
+  // const handleImageDelete = (index) => {
+  //
+  // }
 
-  }
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addPostRequest({ content: text, userId: my.id, User: my }));
+    dispatch(addPostRequest({ content: text, userId: my?.id as number | string, User: my as User }));
   }
   return (
     <Box sx={{ m: 1 }}>
