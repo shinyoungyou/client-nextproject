@@ -2,6 +2,13 @@ import produce from 'immer';
 
 import shortId from 'shortid';
 import { faker } from '@faker-js/faker/locale/en_CA';
+import {
+  AddCommentActionType,
+  AddPostActionType, LikePostActionType,
+  LoadPostsActionType,
+  RemoveCommentActionType,
+  RemovePostActionType, UnlikePostActionType
+} from "../action-types/post";
 
 export const initialState = {
   bringMorePosts: true,
@@ -63,186 +70,108 @@ export const initialState = {
     }],
 }
 
-export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
-export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
-export const LOAD_POSTS_FAILURE = 'LOAD_POSTS_FAILURE';
-
-export const ADD_POST_REQUEST = 'ADD_POST_REQUEST';
-export const ADD_POST_SUCCESS = 'ADD_POST_SUCCESS';
-export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
-
-export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
-export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
-export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
-
-export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
-export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
-export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
-
-export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
-export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
-export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
-
-export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
-export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
-export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
-
-export const REMOVE_COMMENT_REQUEST = 'REMOVE_COMMENT_REQUEST';
-export const REMOVE_COMMENT_SUCCESS = 'REMOVE_COMMENT_SUCCESS';
-export const REMOVE_COMMENT_FAILURE = 'REMOVE_COMMENT_FAILURE';
-
-export const loadPostsRequest = (data) => {
-  return {
-    type: LOAD_POSTS_REQUEST,
-    data
-  }
-}
-
-export const addPostRequest = (data) => {
-  return {
-    type: ADD_POST_REQUEST,
-    data
-  }
-}
-
-export const removePostRequest = (data) => {
-  return {
-    type: REMOVE_POST_REQUEST,
-    data
-  }
-}
-
-export const addCommentRequest = (data) => {
-  return {
-    type: ADD_COMMENT_REQUEST,
-    data
-  }
-}
-
-export const removeCommentRequest = (data) => {
-  return {
-    type: REMOVE_COMMENT_REQUEST,
-    data
-  }
-}
-
-
-export const likePostRequest = (data) => {
-  return {
-    type: LIKE_POST_REQUEST,
-    data
-  }
-}
-
-export const unlikePostRequest = (data) => {
-  return {
-    type: UNLIKE_POST_REQUEST,
-    data
-  }
-}
-
 const reducer = (state = initialState, action) => produce(state, (draft)=>{
   switch (action.type){
-    case LOAD_POSTS_REQUEST:
+    case LoadPostsActionType.LOAD_POSTS_REQUEST:
       draft.loadPostsLoading = true;
       draft.loadPostsDone = false;
       draft.loadPostsError = null;
       break;
-    case LOAD_POSTS_SUCCESS:
+    case LoadPostsActionType.LOAD_POSTS_SUCCESS:
       draft.mainPosts = draft.mainPosts.concat(action.data);
       draft.loadPostsLoading = false;
       draft.loadPostsDone = true;
       draft.bringMorePosts = draft.mainPosts.length < 50;
       break;
-    case LOAD_POSTS_FAILURE:
+    case LoadPostsActionType.LOAD_POSTS_FAILURE:
       draft.loadPostsLoading = false;
       draft.loadPostsError = action.error;
       break;
-    case ADD_POST_REQUEST:
+    case AddPostActionType.ADD_POST_REQUEST:
       draft.addPostLoading = true;
       draft.addPostDone = false;
       draft.addPostError = null;
       break;
-    case ADD_POST_SUCCESS:
+    case AddPostActionType.ADD_POST_SUCCESS:
       draft.mainPosts.unshift(action.data);
       draft.addPostLoading = false;
       draft.addPostDone = true;
       break;
-    case ADD_POST_FAILURE:
+    case AddPostActionType.ADD_POST_FAILURE:
       draft.addPostLoading = false;
       draft.addPostError = action.error;
       break;
-    case REMOVE_POST_REQUEST:
+    case RemovePostActionType.REMOVE_POST_REQUEST:
       draft.removePostLoading = true;
       draft.removePostDone = false;
       draft.removePostError = null;
       break;
-    case REMOVE_POST_SUCCESS:
+    case RemovePostActionType.REMOVE_POST_SUCCESS:
       draft.mainPosts = draft.mainPosts.filter((post) => post.id !== action.data);
       draft.removePostLoading = false;
       draft.removePostDone = true;
       break;
-    case REMOVE_POST_FAILURE:
+    case RemovePostActionType.REMOVE_POST_FAILURE:
       draft.addPostLoading = false;
       draft.addPostError = action.error;
       break;
-    case ADD_COMMENT_REQUEST:
+    case AddCommentActionType.ADD_COMMENT_REQUEST:
       draft.addCommentLoading = true;
       draft.addCommentDone = false;
       draft.addCommentError = null;
       break;
-    case ADD_COMMENT_SUCCESS:
+    case AddCommentActionType.ADD_COMMENT_SUCCESS:
       const addCommentToPost = draft.mainPosts.find((post) => post.id === action.data.postId);
       addCommentToPost.Comments.unshift(action.data);
       draft.addCommentLoading = false;
       draft.addCommentDone = true;
       break;
-    case ADD_COMMENT_FAILURE:
+    case AddCommentActionType.ADD_COMMENT_FAILURE:
       draft.addCommentLoading = false;
       draft.addCommentError = action.error;
       break;
-    case REMOVE_COMMENT_REQUEST:
+    case RemoveCommentActionType.REMOVE_COMMENT_REQUEST:
       draft.removeCommentLoading = true;
       draft.removeCommentDone = false;
       draft.removeCommentError = null;
       break;
-    case REMOVE_COMMENT_SUCCESS:
+    case RemoveCommentActionType.REMOVE_COMMENT_SUCCESS:
       const removeCommentOfPost = draft.mainPosts.find((post) => post.id === action.data.postId);
       removeCommentOfPost.Comments = removeCommentOfPost.Comments.filter((comment) => comment.id !== action.data.id);
       draft.removeCommentLoading = false;
       draft.removeCommentDone = true;
       break;
-    case REMOVE_COMMENT_FAILURE:
+    case RemoveCommentActionType.REMOVE_COMMENT_FAILURE:
       draft.removeCommentLoading = false;
       draft.removeCommentError = action.error;
       break;
-    case LIKE_POST_REQUEST:
+    case LikePostActionType.LIKE_POST_REQUEST:
       draft.likePostLoading = true;
       draft.likePostDone = false;
       draft.likePostError = null;
       break;
-    case LIKE_POST_SUCCESS:
+    case LikePostActionType.LIKE_POST_SUCCESS:
       const likeToPost = draft.mainPosts.find((post) => post.id === action.data.postId);
       likeToPost.Likes.unshift(action.data);
       draft.likePostLoading = false;
       draft.likePostDone = true;
       break;
-    case LIKE_POST_FAILURE:
+    case LikePostActionType.LIKE_POST_FAILURE:
       draft.likePostLoading = false;
       draft.likePostError = action.error;
       break;
-    case UNLIKE_POST_REQUEST:
+    case UnlikePostActionType.UNLIKE_POST_REQUEST:
       draft.unlikePostLoading = true;
       draft.unlikePostDone = false;
       draft.unlikePostError = null;
       break;
-    case UNLIKE_POST_SUCCESS:
+    case UnlikePostActionType.UNLIKE_POST_SUCCESS:
       const unlikeOfPost = draft.mainPosts.find((post) => post.id === action.data.postId);
       unlikeOfPost.Likes = unlikeOfPost.Likes.filter((like) => like.userId !== action.data.userId);
       draft.unlikePostLoading = false;
       draft.unlikePostDone = true;
       break;
-    case UNLIKE_POST_FAILURE:
+    case UnlikePostActionType.UNLIKE_POST_FAILURE:
       draft.unlikePostLoading = false;
       draft.unlikePostError = action.error;
       break;
