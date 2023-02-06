@@ -1,19 +1,29 @@
 import { useSelector, useDispatch } from "react-redux";
 import { followRequest, unfollowRequest } from "../store/action-creators/user";
+import React, { BaseSyntheticEvent, Dispatch } from "react";
+import RootState from "../store/state-types";
+import { Post, Comment } from '../store/state-types/post';
 
 import { StyledMenu } from "../styles";
-import {
-  MenuItem,
-} from "@mui/material";
+import { MenuItem } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import FlagIcon from "@mui/icons-material/Flag";
-import {LoadingButton} from "@mui/lab";
+import { LoadingButton } from "@mui/lab";
 
-const MoreMenu = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoading }) => {
-  const { my, followLoading, unfollowLoading } = useSelector((state) => state.user);
+interface MoreMenuProps {
+  item: Post | Comment;
+  anchorEl: BaseSyntheticEvent["currentTarget"];
+  setAnchorEl: Dispatch<any>;
+  open: boolean;
+  handleDelete: any;
+  removeLoading: boolean;
+}
+
+const MoreMenu: React.FC<MoreMenuProps> = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoading }) => {
+  const { my, followLoading, unfollowLoading } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const handleClose = () => {
     setAnchorEl(null);
@@ -21,9 +31,9 @@ const MoreMenu = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoadi
 
   const isFollowing = my?.Followings.find((user)=> user.id == item.User.id);
 
-  const handleFollowing = (item) => {
+  const handleFollowing = (item: Post | Comment) => {
     if(isFollowing){
-      dispatch(unfollowRequest(item.User.id));
+      dispatch(unfollowRequest(item.User.id as string | number));
     } else {
       dispatch(followRequest(item.User));
     }
