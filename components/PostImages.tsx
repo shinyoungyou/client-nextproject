@@ -1,8 +1,15 @@
+import React from "react";
+import { Image } from '../store/state-types/post';
+
 import { CardMedia } from "@mui/material";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-const PostImages = ({ images }) => {
+interface PostImagesProps {
+  images: Image[]
+}
+
+const PostImages: React.FC<PostImagesProps> = ({ images }) => {
   return (
       <>
         {images.length == 1 &&
