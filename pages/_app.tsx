@@ -1,9 +1,13 @@
+import type { NextPage } from 'next';
+import { ElementType } from 'react';
 import Head from "next/head";
-import PropTypes from "prop-types";
 
 import wrapper from '../store/configureStore';
 
-const App = ({ Component }) => {
+interface AppProps {
+  Component: ElementType
+}
+const App: NextPage<AppProps> = ({ Component }) => {
   return (
     <>
       <Head>
@@ -21,10 +25,6 @@ const App = ({ Component }) => {
       <Component />
     </>
   );
-};
-
-App.propTypes = {
-  Component: PropTypes.elementType.isRequired,
 };
 
 export default wrapper.withRedux(App); // (configureStore가 들어있는)HOC로 감싸주기. 
