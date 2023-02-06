@@ -2,13 +2,16 @@ import { useSelector } from "react-redux";
 import Head from "next/head";
 import { useRouter } from 'next/router'
 import { useEffect } from "react";
+import type { NextPage } from 'next';
+import RootState from "../store/state-types";
+import { User } from '../store/state-types/user';
 
 import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
 
-const Profile = () => {
-  const { my } = useSelector((state)=>state.user);
+const Profile: NextPage = () => {
+  const { my } = useSelector((state: RootState)=>state.user);
   const router = useRouter();
 
   useEffect(()=>{
@@ -22,8 +25,8 @@ const Profile = () => {
     </Head>
     <AppLayout>
       <NicknameEditForm />
-      <FollowList header="Followings" item={my?.Followings} />
-      <FollowList header="Followers" item={my?.Followers}/>
+      <FollowList header="Followings" item={my?.Followings as User["Followings"]} />
+      <FollowList header="Followers" item={my?.Followers as User["Followers"]}/>
     </AppLayout>
     </>
   )
