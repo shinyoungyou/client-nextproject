@@ -1,11 +1,12 @@
 import Link from "next/link";
-import PropTypes from "prop-types";
 import { useSelector } from 'react-redux';
+import React, { ReactNode } from 'react';
+import RootState from "../store/state-types";
 
 import LoginForm from './LoginForm';
 import UserProfile from './UserProfile';
+import { Search, SearchIconWrapper, StyledInputBase } from '../styles';
 
-import { styled, alpha } from "@mui/material/styles";
 import {
   Grid,
   AppBar,
@@ -13,14 +14,17 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  InputBase,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import '@fontsource/public-sans';
 
-const AppLayout = ({ children }) => {
-  const { my } = useSelector((state)=>state.user);
+interface AppLayoutProps {
+  children: ReactNode
+}
+
+const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
+  const { my } = useSelector((state: RootState)=>state.user);
   const menuId = "primary-search-account-menu";
 
   return (
@@ -78,50 +82,6 @@ const AppLayout = ({ children }) => {
       </Grid>
     </Box>
   );
-};
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(3),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
-
-AppLayout.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default AppLayout;
