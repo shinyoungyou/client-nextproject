@@ -1,7 +1,10 @@
-import Head from "next/head";
-import { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { signupRequest } from '../store/action-creators/user';
+import Head from "next/head";
+import { useState, useEffect, useCallback, MouseEvent, ChangeEvent, FormEvent } from "react";
+import type { NextPage } from 'next';
+import RootState from "../store/state-types";
+
 import AppLayout from '../components/AppLayout';
 
 import {
@@ -18,15 +21,15 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from '@mui/lab';
 
-const Signup = () => {
+const Signup: NextPage = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone } = useSelector((state)=>state.user);
+  const { signUpLoading, signUpDone } = useSelector((state: RootState)=>state.user);
   const [form, setForm] = useState({
     email: "",
     username: "",
     pass: "",
     passCheck: "",
-    term: false
+    term: ""
   });
   const [passError, setPassError] = useState(false);
   const [termError, setTermError] = useState(false);
@@ -42,12 +45,12 @@ const Signup = () => {
         username: "",
         pass: "",
         passCheck: "",
-        term: false
+        term: ""
       })
     }
   }, [signUpDone])
   const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event) => {
+  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
@@ -61,18 +64,17 @@ const Signup = () => {
     }
   }, [form])
 
-  const handleChange = useCallback((e) => {
-    // const { name, value } = e.target; // 비구조화 할당 한 name와 value는 read-only라서 name 또는 value의 값을 바꿀 수 없다. 
-
+  const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    // const { name, value } = e.target; // 비구조화 할당 한 name와 value는 read-only라서 name 또는 value의 값을 바꿀 수 없다.
     if (e.target.checked){
-      e.target.value = true;
+      e.target.value = "checked";
     }
 
     setForm((prev) => ({ ...prev, [e.target?.name]: e.target?.value }));
   }, [form]);
 
 
-  const handleSubmit = useCallback((e) => {
+  const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (pass !== passCheck){  
       console.log("before fake req");
