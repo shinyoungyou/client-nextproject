@@ -8,11 +8,12 @@ import { LogInActionType, LogOutActionType, SignUpActionType,
 import axios from 'axios';
 
 function logInAPI(data) {
-  return axios.post('/user/login', data)
+  return axios.post('user/login', data)
 }
 function* logIn(action) {
-  // const result = yield call(logInAPI, action.data);
-  yield delay(1000);
+  const result = yield call(logInAPI, action.data);
+  console.log(result);
+  // yield delay(1000);
   try{
     console.log('saga login');
     yield put({
@@ -49,12 +50,13 @@ function* logOut() {
   }
 }
 
-function signUpAPI(data) {
-  return axios.post('/user/signup', data)
+function signUpAPI(data) { // post /: signup
+  return axios.post('/user/', data)
 }
 function* signUp(action) {
-  // const result = yield call(signUpAPI, action.data);
-  yield delay(1000);
+  const result = yield call(signUpAPI, action.data);
+  console.log(result);
+  // yield delay(1000);
   try{
     yield put({
       type: SignUpActionType.SIGN_UP_SUCCESS,
@@ -65,6 +67,7 @@ function* signUp(action) {
       type: SignUpActionType.SIGN_UP_FAILURE,
       error: err.response.data,
     })
+    console.log(err.response.data)
   }
 }
 
