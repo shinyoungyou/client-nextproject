@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { signupRequest } from '../store/action-creators/user';
+import { signUp } from '../store/thunks/user';
 import Head from "next/head";
+import { useRouter } from 'next/router'
 import { useState, useEffect, useCallback, MouseEvent, ChangeEvent, FormEvent } from "react";
 import type { NextPage } from 'next';
 import RootState from "../store/state-types";
@@ -23,7 +24,7 @@ import { LoadingButton } from '@mui/lab';
 
 const Signup: NextPage = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone } = useSelector((state: RootState)=>state.user);
+  const { signUpLoading, signUpDone, signUpError } = useSelector((state: RootState)=>state.user);
   const [form, setForm] = useState({
     email: "",
     username: "",
@@ -33,6 +34,7 @@ const Signup: NextPage = () => {
   });
   const [passError, setPassError] = useState(false);
   const [termError, setTermError] = useState(false);
+  const router = useRouter();
 
   const { email, username, pass, passCheck, term } = form;
 
@@ -47,16 +49,24 @@ const Signup: NextPage = () => {
         passCheck: "",
         term: ""
       })
+      router.push('/');
     }
   }, [signUpDone])
+
+  useEffect(()=>{
+    if(signUpError){
+      // mui alert compo 사용하기
+      alert(signUpError);
+    }
+  }, [signUpError])
+
   const handleClickShowPassword = () => setShowPassword((show) => !show);
   const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
   };
 
   useEffect(()=>{
-    console.log(form);
-    if (pass !== passCheck){  
+    if (pass !== passCheck){
       setPassError(true);
     }
     if (pass == passCheck){  
@@ -87,7 +97,7 @@ const Signup: NextPage = () => {
     }
 
     // send req first,
-    dispatch(signupRequest({ email, username, pass }));
+    dispatch(signUp({ email, username, pass }));
     console.log("fake req");
     console.log(email, username, pass);
     // and then initialize, but do not here
