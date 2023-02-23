@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removeCommentRequest } from "../store/action-creators/post";
+import { removeComment } from "../store/thunks/post";
 import React, { useState, MouseEvent, BaseSyntheticEvent } from "react";
 import RootState from "../store/state-types";
 import { Comment } from '../store/state-types/post';
@@ -35,7 +35,7 @@ const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
   };
 
   const handleDeleteComment = () => {
-    dispatch(removeCommentRequest(comment));
+    dispatch(removeComment(comment));
   }
 
   return (

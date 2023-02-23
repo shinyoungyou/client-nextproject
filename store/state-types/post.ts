@@ -4,48 +4,49 @@ export default interface PostState {
     bringMorePosts: boolean;
     loadPostsLoading: boolean;
     loadPostsDone: boolean;
-    loadPostsError: ErrorEvent | null;
+    loadPostsError: string | null;
     addPostLoading: boolean;
     addPostDone: boolean;
-    addPostError: ErrorEvent | null;
+    addPostError: string | null;
     removePostLoading: boolean;
     removePostDone: boolean;
-    removePostError: ErrorEvent | null;
+    removePostError: string | null;
     addCommentLoading: boolean;
     addCommentDone: boolean;
-    addCommentError: ErrorEvent | null;
+    addCommentError: string | null;
     removeCommentLoading: boolean;
     removeCommentDone: boolean;
-    removeCommentError: ErrorEvent | null;
+    removeCommentError: string | null;
     likePostLoading: boolean;
     likePostDone: boolean;
-    likePostError: ErrorEvent | null;
+    likePostError: string | null;
     unlikePostLoading: boolean;
     unlikePostDone: boolean;
-    unlikePostError: ErrorEvent | null;
+    unlikePostError: string | null;
     mainPosts: Post[];
     imagePaths: ImagePath[];
 }
 
 export interface Post {
-    id: string;
+    id: number | string;
     content: string;
     createdAt: string;
     User: Partial<User>,
     Likes: Like[] | [];
-    RetweetId?: number;
-    Retweet: [];
+    // RetweetId?: number;
+    // Retweet: [];
     Images: Image[] | [];
     Comments: Comment[] | [];
 }
 export interface Like {
-    id: string;
-    postId: string;
-    userId: string;
+    id: number | string;
+    postId: number | string;
+    userId: number | string;
 }
 
 export interface Comment {
-    id: string;
+    id: number | string;
+    postId: number | string;
     content: string;
     createdAt: string;
     User: Partial<User>;
