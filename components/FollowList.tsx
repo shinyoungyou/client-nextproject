@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { unfollowRequest } from "../store/action-creators/user";
+import { unfollow } from "../store/thunks/user";
 import React, { useState } from 'react';
 import { User } from '../store/state-types/user';
 
@@ -15,7 +15,7 @@ const FollowList: React.FC<FollowListProps> = ({ header, item }) => {
   const [targetIndex, setTargetIndex] = useState(-1);
 
   const handleUnfollow = (id: number | string) => {
-    dispatch(unfollowRequest(id));
+    dispatch(unfollow(id));
   }
 
   return (
