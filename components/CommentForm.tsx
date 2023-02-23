@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { addCommentRequest } from '../store/action-creators/post';
+import { addComment } from '../store/thunks/post';
 import React, { useState, useEffect, FormEvent } from 'react';
 import RootState from "../store/state-types";
 import { Post } from "../store/state-types/post";
@@ -29,7 +29,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ post }) => {
   const addEmoji = (emoji: string) => () => setText(`${text}${emoji}`);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addCommentRequest({ content: text, postId: post.id, userId: my?.id as number | string, User: my as User  }));
+    dispatch(addComment({ content: text, postId: post.id, userId: my?.id as number | string, User: my as User  }));
   }
   return (
       <Box sx={{ m: 1 }}>
