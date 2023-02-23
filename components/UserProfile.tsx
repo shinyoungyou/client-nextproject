@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { logoutRequest, navigateProfileActionCreator } from '../store/action-creators/user';
+import { logOut } from '../store/thunks/user';
+import { navigateProfile } from '../store/reducers/user';
 import { useRouter } from 'next/router'
 import React from 'react';
 import RootState from "../store/state-types";
@@ -9,12 +10,12 @@ import { blue } from '@mui/material/colors';
 import { LoadingButton } from '@mui/lab';
 
 const UserProfile: React.FC = () => {
-  const { my, logOutLoading, navigateProfile } = useSelector((state: RootState)=>state.user);
+  const { my, logOutLoading, profileMenu } = useSelector((state: RootState)=>state.user);
   const dispatch = useDispatch();
   const router = useRouter();
 
   const handleLogout = () => {
-    dispatch(logoutRequest);
+    dispatch(logOut());
   }
 
   const RedirectToHome = () => {
@@ -41,9 +42,9 @@ const UserProfile: React.FC = () => {
       <Box sx={{ width: 500 }}>
       <BottomNavigation
         showLabels
-        value={navigateProfile}
+        value={profileMenu}
         onChange={(event, newValue) => {
-          dispatch(navigateProfileActionCreator(newValue));
+          dispatch(navigateProfile(newValue));
         }}
       >
 

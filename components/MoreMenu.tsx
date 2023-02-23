@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { followRequest, unfollowRequest } from "../store/action-creators/user";
+import { follow, unfollow } from "../store/thunks/user";
 import React, { BaseSyntheticEvent, Dispatch } from "react";
 import RootState from "../store/state-types";
 import { Post, Comment } from '../store/state-types/post';
@@ -33,9 +33,9 @@ const MoreMenu: React.FC<MoreMenuProps> = ({ item, anchorEl, setAnchorEl, open, 
 
   const handleFollowing = (item: Post | Comment) => {
     if(isFollowing){
-      dispatch(unfollowRequest(item.User.id as string | number));
+      dispatch(unfollow(item.User.id as string | number));
     } else {
-      dispatch(followRequest(item.User));
+      dispatch(follow(item.User));
     }
   }
 

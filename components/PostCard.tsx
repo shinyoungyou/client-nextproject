@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { removePostRequest, likePostRequest, unlikePostRequest } from '../store/action-creators/post'
+import { removePost, likePost, unlikePost } from '../store/thunks/post'
 import React, { useState, MouseEvent, BaseSyntheticEvent } from 'react';
 import RootState from "../store/state-types";
 import { Post } from '../store/state-types/post';
@@ -55,16 +55,16 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   };
 
   const handleDeletePost = () => {
-    dispatch(removePostRequest(post.id));
+    dispatch(removePost(post.id));
   }
 
   const isLiked = post.Likes.find((like) => like.userId == my?.id);
   const handleLikeButton = (post: Post) => {
     if(!my) return alert("로그인이 필요합니다.");
     if(isLiked){
-      dispatch(unlikePostRequest({ postId: post.id, userId: my.id }));
+      dispatch(unlikePost({ postId: post.id, userId: my.id }));
     } else {
-      dispatch(likePostRequest({ postId: post.id, userId: my.id }));
+      dispatch(likePost({ postId: post.id, userId: my.id }));
 
     }
   }

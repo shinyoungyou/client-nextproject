@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { addPostRequest } from '../store/action-creators/post';
+import { addPost } from '../store/thunks/post';
 import React, { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import RootState from "../store/state-types";
 import { ImagePath } from "../store/state-types/post";
@@ -56,7 +56,11 @@ const PostForm: React.FC = () => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addPostRequest({ content: text, userId: my?.id as number | string, User: my as User }));
+    dispatch(addPost({
+      content: text,
+      userId: my?.id as number | string,
+      User: my as User
+    }));
   }
   return (
     <Box sx={{ m: 1 }}>
