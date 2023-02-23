@@ -25,6 +25,7 @@
     "@mui/joy": "^5.0.0-alpha.64",
     "@mui/lab": "^5.0.0-alpha.117",
     "@mui/material": "^5.11.5",
+    "@reduxjs/toolkit": "^1.9.3",
     "axios": "^0.19.2",
     "cookie-parser": "^1.4.5",
     "cross-env": "^7.0.2",
@@ -43,6 +44,7 @@
     "react-slick": "^0.26.1",
     "redux": "^4.0.5",
     "redux-devtools-extension": "^2.13.9",
+    "redux-logger": "^3.0.6",
     "redux-saga": "^1.2.2",
     "shortid": "^2.2.16",
     "styled-components": "^5.1.1",
@@ -51,6 +53,7 @@
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
     "@types/node": "^18.11.18",
-    "@types/react": "^18.0.27"
+    "@types/react": "^18.0.27",
+    "@types/shortid": "0.0.29"
   }
 }
