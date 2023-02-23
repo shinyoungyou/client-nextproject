@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { loadPostsRequest } from "../store/action-creators/post";
+import { loadPosts } from "../store/thunks/post";
 import { useEffect } from "react";
 import type { NextPage } from 'next';
 import RootState from "../store/state-types";
@@ -14,15 +14,16 @@ const Home: NextPage = () => {
 
   useEffect(()=>{
     if(mainPosts.length < 10){
-      dispatch(loadPostsRequest);
+      dispatch(loadPosts());
     }
+    console.log("loadPosts")
   }, [])
 
   useEffect(()=>{
     const handleScroll = () => {
       if(window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 700){
         if(!loadPostsLoading && bringMorePosts){
-          dispatch(loadPostsRequest);
+          dispatch(loadPosts());
         }
       }
     }
