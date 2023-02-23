@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, MouseEvent, ChangeEvent, FormEvent } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { loginRequest } from '../store/action-creators/user';
+import { logIn } from '../store/thunks/user';
 import Link from 'next/link';
 import RootState from "../store/state-types";
 
@@ -49,7 +49,7 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(loginRequest(form));
+    dispatch(logIn(form));
   }, [form]);
 
   return (
