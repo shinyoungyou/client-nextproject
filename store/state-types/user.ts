@@ -3,23 +3,23 @@ import { Post } from './post';
 export default interface UserState {
   logInLoading: boolean;
   logInDone: boolean;
-  logInError: ErrorEvent | null;
+  logInError: string | null;
   logOutLoading: boolean;
   logOutDone: boolean;
-  logOutError: ErrorEvent | null;
+  logOutError: string | null;
   signUpLoading: boolean;
   signUpDone: boolean;
-  signUpError: ErrorEvent | null;
+  signUpError: string | null;
   followLoading: boolean;
   followDone: boolean;
-  followError: ErrorEvent | null;
+  followError: string | null;
   unfollowLoading: boolean;
   unfollowDone: boolean;
-  unfollowError: ErrorEvent | null;
+  unfollowError: string | null;
   changeNicknameLoading: boolean;
   changeNicknameDone: boolean;
-  changeNicknameError: ErrorEvent | null;
-  navigateProfile: number;
+  changeNicknameError: string | null;
+  profileMenu: number;
   my: User | null; // my can be null when user is not logged in
   User: User[];
 }
