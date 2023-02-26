@@ -17,8 +17,11 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from '@mui/lab';
 
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+
 const LoginForm: React.FC = () => {
-  const { logInLoading, logInDone } = useSelector((state: RootState)=>state.user)
+  const { logInLoading, logInDone, logInError } = useSelector((state: RootState)=>state.user)
   const dispatch = useDispatch();
   const [form, setForm] = useState({
     email: "",
@@ -94,6 +97,9 @@ const LoginForm: React.FC = () => {
             label="Password"
           />
         </FormControl>
+        {logInError && <Stack sx={{ mx: 1, width: '100%' }} spacing={2}>
+          <Alert severity="error">{logInError}</Alert>
+        </Stack>}
         <ButtonGroup aria-label="outlined button group" style={{ width: '100%', margin: '0 8px' }}>
           <LoadingButton type="submit" variant="contained" loading={logInLoading}>Login</LoadingButton>
           <Button variant="outlined">
