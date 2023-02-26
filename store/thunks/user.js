@@ -7,6 +7,15 @@ const pause = (duration) => {
     });
 };
 
+export const loadMyInfo = createAsyncThunk('user/loadMyInfo', async (payload, thunkAPI) => {
+    try {
+        const response = await instance.get('user/');
+        return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+    } catch (error) {
+        return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
+    }
+})
+
 export const logIn = createAsyncThunk('user/logIn', async (payload, thunkAPI) => {
     try {
         const response = await instance.post('user/login', payload);

@@ -1,10 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { logIn, logOut, signUp, follow, unfollow, changeNickname } from "../thunks/user";
+import { loadMyInfo, logIn, logOut, signUp, follow, unfollow, changeNickname } from "../thunks/user";
 
 const userSlice = createSlice({
   name: 'user',
   initialState: {
+    loadMyInfoLoading: true,
+    loadMyInfoDone: false,
+    loadMyInfoError: null,
     logInLoading: false,
     logInDone: false,
     logInError: null,
@@ -45,12 +48,26 @@ const userSlice = createSlice({
     //     ...action.payload.user,
     //   }
     // })
-   builder.addCase(logIn.pending, (state, action)=>{
+    builder.addCase(loadMyInfo.pending, (state, action)=>{
+      state.loadMyInfoLoading = true;
+      state.loadMyInfoDone = false;
+      state.loadMyInfoError = null;
+    })
+    builder.addCase(loadMyInfo.fulfilled, (state, action)=>{
+      state.loadMyInfoLoading = false;
+      state.my = action.payload;
+      state.loadMyInfoDone = true;
+    })
+    builder.addCase(loadMyInfo.rejected, (state, action)=>{
+      state.loadMyInfoLoading = false;
+      state.loadMyInfoError = action.payload;
+    })
+    builder.addCase(logIn.pending, (state, action)=>{
       state.logInLoading = true;
       state.logInDone = false;
       state.logInError = null;
     })
-   builder.addCase(logIn.fulfilled, (state, action)=>{
+    builder.addCase(logIn.fulfilled, (state, action)=>{
       state.logInLoading = false;
       state.my = action.payload;
       state.logInDone = true;

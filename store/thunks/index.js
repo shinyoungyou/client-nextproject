@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const instance = axios.create({
-  baseURL: `http://localhost:3065`,
+  baseURL: `http://localhost:3065`, // cors
+  withCredentials: true, // cookie (user info)
 });
 // instance.interceptors.request.use(function (instance) {
 //   const kakao_authorization = localStorage.getItem("kakao_authorization");
