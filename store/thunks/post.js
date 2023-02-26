@@ -13,10 +13,10 @@ const pause = (duration) => {
 
 export const loadPosts = createAsyncThunk('post/loadPosts', async (payload, thunkAPI) => {
   try {
-    // const response = await instance.post('post/', payload);
-    await pause(1000);
-    // return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
-    return thunkAPI.fulfillWithValue(getDummyPosts(10)); // pass to extraReducer
+    const response = await instance.get('posts/');
+    // await pause(1000);
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+    // return thunkAPI.fulfillWithValue(getDummyPosts(10)); // pass to extraReducer
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
   }
@@ -24,12 +24,12 @@ export const loadPosts = createAsyncThunk('post/loadPosts', async (payload, thun
 
 export const addPost = createAsyncThunk('post/addPost', async (payload, thunkAPI) => {
   try {
-    // const response = await instance.post('post/', payload);
-    await pause(1000);
-    const id = shortId.generate();
-    thunkAPI.dispatch(addPostToMe(id));
-    // return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
-    return thunkAPI.fulfillWithValue(postMyDummyPost(payload, id)); // pass to extraReducer
+    const response = await instance.post('post/', payload);
+    // await pause(1000);
+    // const id = shortId.generate();
+    thunkAPI.dispatch(addPostToMe(response.data.id));
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+    // return thunkAPI.fulfillWithValue(postMyDummyPost(payload, id)); // pass to extraReducer
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
   }
@@ -49,11 +49,11 @@ export const removePost = createAsyncThunk('post/removePost', async (payload, th
 
 export const addComment = createAsyncThunk('post/addComment', async (payload, thunkAPI) => {
   try {
-    // const response = await instance.post(`post/${payload.postId}/comment/`, payload);
-    await pause(1000);
-    const id = shortId.generate();
-    // return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
-    return thunkAPI.fulfillWithValue(postMyDummyComment(payload, id)); // pass to extraReducer
+    const response = await instance.post(`post/${payload.postId}/comment/`, payload);
+    // await pause(1000);
+    // const id = shortId.generate();
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+    // return thunkAPI.fulfillWithValue(postMyDummyComment(payload, id)); // pass to extraReducer
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
   }
