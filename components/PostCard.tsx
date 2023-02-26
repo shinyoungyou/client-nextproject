@@ -58,7 +58,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     dispatch(removePost(post.id));
   }
 
-  const isLiked = post.Likes.find((like) => like.userId == my?.id);
+  const isLiked = post.Likes?.find((like) => like.userId == my?.id);
   const handleLikeButton = (post: Post) => {
     if(!my) return alert("로그인이 필요합니다.");
     if(isLiked){
@@ -104,7 +104,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
         title={post.User.username}
         subheader={post.createdAt}
     />
-    {post.Images.length > 0 && post.Images.length < 5 && <PostImages images={post.Images}/>}
+    {post.Images?.length > 0 && post.Images.length < 5 && <PostImages images={post.Images}/>}
     <CardContent>
       <Typography variant="body2" color="text.secondary">
         {post.content}

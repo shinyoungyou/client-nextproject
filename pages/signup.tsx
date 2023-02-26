@@ -24,7 +24,7 @@ import { LoadingButton } from '@mui/lab';
 
 const Signup: NextPage = () => {
   const dispatch = useDispatch();
-  const { signUpLoading, signUpDone, signUpError } = useSelector((state: RootState)=>state.user);
+  const { signUpLoading, signUpDone, signUpError, my } = useSelector((state: RootState)=>state.user);
   const [form, setForm] = useState({
     email: "",
     username: "",
@@ -39,6 +39,12 @@ const Signup: NextPage = () => {
   const { email, username, pass, passCheck, term } = form;
 
   const [showPassword, setShowPassword] = useState(false);
+
+  useEffect(()=>{
+    if(my){
+      router.replace('/');
+    }
+  }, [my])
 
   useEffect(()=>{
     if(signUpDone){

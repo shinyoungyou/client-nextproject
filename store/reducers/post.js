@@ -122,7 +122,7 @@ const postSlice = createSlice({
       state.addCommentError = null;
     })
     builder.addCase(addComment.fulfilled, (state, action)=>{
-      const addCommentToPost = state.mainPosts.find((post) => post.id === action.payload.postId);
+      const addCommentToPost = state.mainPosts.find((post) => post.id == action.payload.PostId);
       if (addCommentToPost){
         addCommentToPost.Comments.unshift(action.payload);
         state.addCommentLoading = false;
@@ -139,7 +139,7 @@ const postSlice = createSlice({
       state.removeCommentError = null;
     })
     builder.addCase(removeComment.fulfilled, (state, action)=>{
-      const removeCommentOfPost = state.mainPosts.find((post) => post.id === action.payload.postId);
+      const removeCommentOfPost = state.mainPosts.find((post) => post.id === action.payload.PostId);
       if (removeCommentOfPost){
         removeCommentOfPost.Comments = removeCommentOfPost.Comments.filter((comment) => comment.id !== action.payload.id);
         state.removeCommentLoading = false;
@@ -156,7 +156,7 @@ const postSlice = createSlice({
       state.likePostError = null;
     })
     builder.addCase(likePost.fulfilled, (state, action)=>{
-      const likeToPost = state.mainPosts.find((post) => post.id === action.payload.postId);
+      const likeToPost = state.mainPosts.find((post) => post.id === action.payload.PostId);
       if (likeToPost){
         likeToPost.Likes.unshift(action.payload);
         state.likePostLoading = false;
@@ -173,9 +173,9 @@ const postSlice = createSlice({
       state.unlikePostError = null;
     })
     builder.addCase(unlikePost.fulfilled, (state, action)=>{
-      const unlikeOfPost = state.mainPosts.find((post) => post.id === action.payload.postId);
+      const unlikeOfPost = state.mainPosts.find((post) => post.id === action.payload.PostId);
       if (unlikeOfPost){
-        unlikeOfPost.Likes = unlikeOfPost.Likes.filter((like) => like.userId !== action.payload.userId);
+        unlikeOfPost.Likes = unlikeOfPost.Likes.filter((like) => like.userId !== action.payload.UserId);
         state.unlikePostLoading = false;
         state.unlikePostDone = true;
       }

@@ -1,4 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
+import { loadMyInfo } from "../store/thunks/user";
 import { loadPosts } from "../store/thunks/post";
 import { useEffect } from "react";
 import type { NextPage } from 'next';
@@ -14,6 +15,7 @@ const Home: NextPage = () => {
 
   useEffect(()=>{
     if(mainPosts.length < 10){
+      dispatch(loadMyInfo());
       dispatch(loadPosts());
     }
     console.log("loadPosts")
