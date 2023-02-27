@@ -16,39 +16,34 @@ export default interface UserState {
   unfollowLoading: boolean;
   unfollowDone: boolean;
   unfollowError: string | null;
-  changeNicknameLoading: boolean;
-  changeNicknameDone: boolean;
-  changeNicknameError: string | null;
+  changeUsernameLoading: boolean;
+  changeUsernameDone: boolean;
+  changeUsernameError: string | null;
   profileMenu: number;
   my: User | null; // my can be null when user is not logged in
   User: User[];
 }
 
 export interface User {
-  id: number | string;
+  id: number;
   username: string;
   email: string;
-  pass: string;
-  // Followings: Following[] | Partial<User>[] | [];
+  pass: string | null;
   Followings: Partial<User>[] | [];
-
-  // Followers: Follower[] | Partial<User>[] | [];
   Followers: Partial<User>[] | [];
-
   Posts: Partial<Post>[] | [];
 }
 
 export interface Following {
-  id: number;
   FollowerId: number;
   FollowingId: number;
-  Following: Partial<User>;
-
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Follower {
-  id: number;
   FollowingId: number;
   FollowerId: number;
-  Follower: Partial<User>;
+  createdAt: string;
+  updatedAt: string;
 }

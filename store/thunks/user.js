@@ -63,9 +63,9 @@ export const unfollow = createAsyncThunk('user/unfollow', async (payload, thunkA
     }
 })
 
-export const changeNickname = createAsyncThunk('user/changeNickname', async (payload, thunkAPI) => {
+export const changeUsername = createAsyncThunk('user/changeUsername', async (payload, thunkAPI) => {
     try {
-        // const response = await instance.patch('user/nickname', payload);
+        const response = await instance.patch('user/profile', payload);
         await pause(1000);
         return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
     } catch (error) {

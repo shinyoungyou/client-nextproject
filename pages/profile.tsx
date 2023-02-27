@@ -7,7 +7,7 @@ import RootState from "../store/state-types";
 import { User } from '../store/state-types/user';
 
 import AppLayout from '../components/AppLayout';
-import NicknameEditForm from '../components/NicknameEditForm';
+import UsernameEditForm from '../components/UsernameEditForm';
 import FollowList from '../components/FollowList';
 
 const Profile: NextPage = () => {
@@ -24,7 +24,7 @@ const Profile: NextPage = () => {
         <title>Profile Page</title>
     </Head>
     <AppLayout>
-      <NicknameEditForm />
+      <UsernameEditForm />
       <FollowList header="Followings" item={my?.Followings as User["Followings"]} />
       <FollowList header="Followers" item={my?.Followers as User["Followers"]}/>
     </AppLayout>
