@@ -8,12 +8,18 @@ export default interface PostState {
     addPostLoading: boolean;
     addPostDone: boolean;
     addPostError: string | null;
+    editPostLoading: boolean;
+    editPostDone: boolean;
+    editPostError: string | null;
     removePostLoading: boolean;
     removePostDone: boolean;
     removePostError: string | null;
     addCommentLoading: boolean;
     addCommentDone: boolean;
     addCommentError: string | null;
+    editCommentLoading: boolean;
+    editCommentDone: boolean;
+    editCommentError: string | null;
     removeCommentLoading: boolean;
     removeCommentDone: boolean;
     removeCommentError: string | null;
@@ -28,27 +34,36 @@ export default interface PostState {
 }
 
 export interface Post {
-    id: number | string;
+    id: number;
     content: string;
     createdAt: string;
+    updatedAt: string;
     User: Partial<User>,
-    Likes: Like[] | [];
+    Likers: Liker[] | [];
     // RetweetId?: number;
     // Retweet: [];
     Images: Image[] | [];
     Comments: Comment[] | [];
 }
+
+export interface Liker {
+    id: number;
+    Like: Like | null; // loadPosts가 아닌 경우 = null
+
+}
 export interface Like {
-    id: number | string;
-    postId: number | string;
-    userId: number | string;
+    UserId: number;
+    PostId: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Comment {
-    id: number | string;
-    postId: number | string;
+    id: number;
+    postId: number;
     content: string;
     createdAt: string;
+    updatedAt: string;
     User: Partial<User>;
 }
 

@@ -10,6 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import ListItemDecorator from "@mui/joy/ListItemDecorator";
 import DeleteIcon from "@mui/icons-material/Delete";
 import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
+import BackspaceIcon from '@mui/icons-material/Backspace';
 import FlagIcon from "@mui/icons-material/Flag";
 import { LoadingButton } from "@mui/lab";
 
@@ -18,11 +19,15 @@ interface MoreMenuProps {
   anchorEl: BaseSyntheticEvent["currentTarget"];
   setAnchorEl: Dispatch<any>;
   open: boolean;
+  editStatus: string;
+  setEditStatus: React.Dispatch<React.SetStateAction<string>>;
+  handleEdit: any;
+  editLoading: boolean;
   handleDelete: any;
   removeLoading: boolean;
 }
 
-const MoreMenu: React.FC<MoreMenuProps> = ({ item, anchorEl, setAnchorEl, open, handleDelete, removeLoading }) => {
+const MoreMenu: React.FC<MoreMenuProps> = ({ item, anchorEl, setAnchorEl, open, editStatus, setEditStatus, handleEdit, editLoading, handleDelete, removeLoading }) => {
   const { my, followLoading, unfollowLoading } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
   const handleClose = () => {
@@ -50,10 +55,25 @@ const MoreMenu: React.FC<MoreMenuProps> = ({ item, anchorEl, setAnchorEl, open, 
           onClose={handleClose}
       >
         {my?.id == item.User.id ? <>
-          <MenuItem key="Edit" onClick={handleClose} disableRipple>
-            <EditIcon/>
-            Edit
+          <MenuItem key="Edit" onClick={handleEdit}>
+            <LoadingButton loading={editLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit"  }}>
+              <ListItemDecorator sx={{color: 'inherit'}}>
+                <EditIcon/>
+              </ListItemDecorator>{' '}
+              {editStatus === "beforeEdit" && "Edit"}
+              {editStatus === "editing" && "Done"}
+            </LoadingButton>
           </MenuItem>
+          {editStatus === "editing" && <MenuItem key="Cancel" onClick={()=>setEditStatus("beforeEdit")}>
+            <LoadingButton
+              loading={editLoading}
+              sx={{p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit"}}>
+              <ListItemDecorator sx={{color: 'inherit'}}>
+                <BackspaceIcon/>
+              </ListItemDecorator>{' '}
+              Cancel
+            </LoadingButton>
+          </MenuItem>}
           <MenuItem key="Delete" onClick={handleDelete} variant="soft" color="danger">
             <LoadingButton loading={removeLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit"  }}>
               <ListItemDecorator sx={{color: 'inherit'}}>

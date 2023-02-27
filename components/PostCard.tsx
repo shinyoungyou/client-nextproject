@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { removePost, likePost, unlikePost } from '../store/thunks/post'
-import React, { useState, MouseEvent, BaseSyntheticEvent } from 'react';
+import { editPost, removePost, likePost, unlikePost } from '../store/thunks/post'
+import React, { useState, useEffect, MouseEvent, BaseSyntheticEvent } from 'react';
 import RootState from "../store/state-types";
 import { Post } from '../store/state-types/post';
 
@@ -9,6 +9,7 @@ import PostImages from './PostImages'
 import CommentForm from './CommentForm';
 import CommentListItem from './CommentListItem';
 import { ExpandMore } from "../styles";
+import { EditContent } from '../styles/styled-components'
 
 import {
   Card,
@@ -36,10 +37,19 @@ interface PostCardProps {
 
 const PostCard: React.FC<PostCardProps> = ({ post }) => {
   const my = useSelector((state: RootState) => state.user.my);
-  const { removePostLoading } = useSelector((state: RootState) => state.post);
+  const { editPostDone, editPostLoading, removePostLoading } = useSelector((state: RootState) => state.post);
   const dispatch = useDispatch();
 
+  const [editStatus, setEditStatus] = useState("beforeEdit");
+  const [content, setContent] = useState(post.content);
+
   const [expanded, setExpanded] = useState(false);
+
+  useEffect(()=>{
+    if(editPostDone){
+      setEditStatus("beforeEdit");
+    }
+  }, [editPostDone])
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -54,17 +64,30 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleDeletePost = () => {
-    dispatch(removePost(post.id));
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
   }
 
-  const isLiked = post.Likes?.find((like) => like.userId == my?.id);
+  const handleEditPost = (post: Post) => {
+    if (editStatus === "beforeEdit"){
+      setEditStatus("editing");
+    } else if (editStatus === "editing"){
+      dispatch(editPost({ id: post.id, content }));
+      setEditStatus("pending");
+    }
+  }
+
+  const handleDeletePost = (post: Post) => {
+    dispatch(removePost(post));
+  }
+
+  const isLiked = post.Likers?.find((like) => like.id == my?.id);
   const handleLikeButton = (post: Post) => {
-    if(!my) return alert("로그인이 필요합니다.");
+    if(!my) return alert('로그인이 필요합니다.');
     if(isLiked){
-      dispatch(unlikePost({ postId: post.id, userId: my.id }));
+      dispatch(unlikePost({ postId: post.id }));
     } else {
-      dispatch(likePost({ postId: post.id, userId: my.id }));
+      dispatch(likePost({ postId: post.id }));
 
     }
   }
@@ -96,18 +119,30 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
               anchorEl={anchorEl}
               setAnchorEl={setAnchorEl}
               open={open}
-              handleDelete={handleDeletePost}
+              editStatus={editStatus}
+              setEditStatus={setEditStatus}
+              handleEdit={()=>handleEditPost(post)}
+              editLoading={editPostLoading}
+              handleDelete={()=>handleDeletePost(post)}
               removeLoading={removePostLoading}
           />
         </>
         }
         title={post.User.username}
-        subheader={post.createdAt}
+        subheader={post.createdAt === post.updatedAt ? post.createdAt : `Edited · ${post.updatedAt}`}
     />
     {post.Images?.length > 0 && post.Images.length < 5 && <PostImages images={post.Images}/>}
     <CardContent>
       <Typography variant="body2" color="text.secondary">
-        {post.content}
+        {editStatus === "editing"
+            ?
+            <EditContent
+              onChange={handleContentChange}
+            >
+              {content}
+            </EditContent>
+            : post.content
+        }
         {/*<PostCardContent content={post.content}/>*/}
       </Typography>
     </CardContent>
@@ -117,7 +152,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           <IconButton  sx={{ color: "inherit", "&:hover": { bgcolor: 'rgba(249, 24, 128, 0.1)' } }}>
             <FavoriteBorderIcon/>
           </IconButton>
-          {post.Likes?.length > 0 ? post.Likes.length : 0}
+          {post.Likers?.length > 0 ? post.Likers.length : 0}
         </IconButton>
       </Tooltip>
       <Tooltip title="Retweet">
