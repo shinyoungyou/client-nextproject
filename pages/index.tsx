@@ -38,12 +38,10 @@ const Home: NextPage = () => {
   }, [loadPostsLoading, bringMorePosts])
 
   return (
-    <>
-      <AppLayout>
-        {my && <PostForm/>}
-        {mainPosts.map((post)=>(<PostCard post={post} key={post.id} />))}
-      </AppLayout>
-    </>
+    <AppLayout>
+      {my && <PostForm/>}
+      {mainPosts.map((post)=>(<PostCard post={post} key={post.id} />))}
+    </AppLayout>
   )
 }
 

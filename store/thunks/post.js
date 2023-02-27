@@ -35,13 +35,22 @@ export const addPost = createAsyncThunk('post/addPost', async (payload, thunkAPI
   }
 })
 
+export const editPost = createAsyncThunk('post/editPost', async (payload, thunkAPI) => {
+  try {
+    const response = await instance.patch(`post/${payload.id}`, payload);
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
+  }
+})
+
 export const removePost = createAsyncThunk('post/removePost', async (payload, thunkAPI) => {
   try {
-    // const response = await instance.delete(`post/${payload.id}`);
-    await pause(1000);
-    thunkAPI.dispatch(removePostToMe(payload));
-    // return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
-    return thunkAPI.fulfillWithValue(payload); // pass to extraReducer
+    const response = await instance.delete(`post/${payload.id}`);
+    // await pause(1000);
+    thunkAPI.dispatch(removePostToMe(response.data));
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+    // return thunkAPI.fulfillWithValue(payload); // pass to extraReducer
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
   }
@@ -59,11 +68,20 @@ export const addComment = createAsyncThunk('post/addComment', async (payload, th
   }
 })
 
+export const editComment = createAsyncThunk('post/editComment', async (payload, thunkAPI) => {
+  try {
+    const response = await instance.patch(`post/${payload.postId}/comment/${payload.id}`, payload);
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
+  }
+})
+
 export const removeComment = createAsyncThunk('post/removeComment', async (payload, thunkAPI) => {
   try {
-    // const response = await instance.delete(`post/${payload.postId}/comment/${payload.id}`);
-    await pause(1000);
-    return thunkAPI.fulfillWithValue(payload); // pass to extraReducer
+    const response = await instance.delete(`post/${payload.postId}/comment/${payload.id}`);
+    // await pause(1000);
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
   }
@@ -71,9 +89,9 @@ export const removeComment = createAsyncThunk('post/removeComment', async (paylo
 
 export const likePost = createAsyncThunk('post/likePost', async (payload, thunkAPI) => {
   try {
-    // const response = await instance.post(`post/${payload.postId}/like`, payload);
-    await pause(1000);
-    return thunkAPI.fulfillWithValue(payload); // pass to extraReducer
+    const response = await instance.post(`post/${payload.postId}/like`);
+    // await pause(1000);
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
   }
@@ -81,9 +99,9 @@ export const likePost = createAsyncThunk('post/likePost', async (payload, thunkA
 
 export const unlikePost = createAsyncThunk('post/unlikePost', async (payload, thunkAPI) => {
   try {
-    // const response = await instance.delete(`post/${payload.postId}/like/${payload.id}`);
-    await pause(1000);
-    return thunkAPI.fulfillWithValue(payload); // pass to extraReducer
+    const response = await instance.delete(`post/${payload.postId}/like`);
+    // await pause(1000);
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
   }
