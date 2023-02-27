@@ -1,10 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
-import { removeComment } from "../store/thunks/post";
-import React, { useState, MouseEvent, BaseSyntheticEvent } from "react";
+import { editComment, removeComment } from "../store/thunks/post";
+import React, {useState, MouseEvent, BaseSyntheticEvent, useEffect} from "react";
 import RootState from "../store/state-types";
-import { Comment } from '../store/state-types/post';
+import {Comment, Post} from '../store/state-types/post';
 
 import MoreMenu from './MoreMenu';
+import { EditContent } from '../styles/styled-components'
 
 import {
   Avatar,
@@ -22,20 +23,46 @@ interface CommentListItemProps {
 }
 
 const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
-  const { removeCommentLoading } = useSelector((state: RootState) => state.post);
+  const { editCommentDone, editCommentLoading, removeCommentLoading } = useSelector((state: RootState) => state.post);
   const { my } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch();
+
+    const [editStatus, setEditStatus] = useState("beforeEdit");
+    const [content, setContent] = useState(comment.content);
 
   const [anchorEl, setAnchorEl] = useState<BaseSyntheticEvent["currentTarget"]>(null);
 
   const open = Boolean(anchorEl);
 
+    useEffect(()=>{
+      if(editCommentDone){
+        setEditStatus("beforeEdit");
+      }
+    }, [editCommentDone])
+
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  }
+
+    const handleEditComment = (comment: Comment) => {
+      if (editStatus === "beforeEdit"){
+        setEditStatus("editing");
+      } else if (editStatus === "editing"){
+        dispatch(editComment({
+          postId: comment.PostId,
+          id: comment.id,
+          content
+        }));
+        setEditStatus("pending");
+      }
+    }
+
   const handleDeleteComment = () => {
-    dispatch(removeComment(comment));
+    dispatch(removeComment({ postId: comment.PostId, id: comment.id }));
   }
 
   return (
@@ -60,7 +87,11 @@ const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
                 anchorEl={anchorEl}
                 setAnchorEl={setAnchorEl}
                 open={open}
-                handleDelete={handleDeleteComment}
+                editStatus={editStatus}
+                setEditStatus={setEditStatus}
+                handleEdit={()=>handleEditComment(comment)}
+                editLoading={editCommentLoading}
+                handleDelete={()=>handleDeleteComment(comment)}
                 removeLoading={removeCommentLoading}
               />
             </>
@@ -71,7 +102,14 @@ const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
           <ListItemText
               sx={{m: 1}}
               primary={comment.User.username}
-              secondary={comment.content}
+              secondary={editStatus === "editing"
+                  ?
+                  <EditContent
+                      onChange={handleContentChange}
+                  >
+                      {content}
+                  </EditContent>
+                  : comment.content}
           />
         </ListItem>
         <Divider variant="inset" component="li"/>

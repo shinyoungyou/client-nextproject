@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from 'next-redux-wrapper';
-import { loadPosts, addPost, removePost, addComment, removeComment, likePost, unlikePost } from "../thunks/post";
+import { loadPosts, addPost, editPost, removePost,
+  addComment, editComment, removeComment, likePost, unlikePost } from "../thunks/post";
 
 import shortId from 'shortid';
 import { faker } from '@faker-js/faker/locale/en_CA';
@@ -15,12 +16,18 @@ const postSlice = createSlice({
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
+    editPostLoading: false,
+    editPostDone: false,
+    editPostError: null,
     removePostLoading: false,
     removePostDone: false,
     removePostError: null,
     addCommentLoading: false,
     addCommentDone: false,
     addCommentError: null,
+    editCommentLoading: false,
+    editCommentDone: false,
+    editCommentError: null,
     removeCommentLoading: false,
     removeCommentDone: false,
     removeCommentError: null,
@@ -102,13 +109,31 @@ const postSlice = createSlice({
       state.addPostLoading = false;
       state.addPostError = action.payload;
     })
+    builder.addCase(editPost.pending, (state, action)=>{
+      state.editPostLoading = true;
+      state.editPostDone = false;
+      state.editPostError = null;
+    })
+    builder.addCase(editPost.fulfilled, (state, action)=>{
+      const post = state.mainPosts.find((post) => post.id === action.payload.id);
+      if (post){
+        post.content = action.payload.content;
+        post.updatedAt = action.payload.updatedAt;
+        state.editPostLoading = false;
+        state.editPostDone = true;
+      }
+    })
+    builder.addCase(editPost.rejected, (state, action)=>{
+      state.editPostLoading = false;
+      state.editPostError = action.payload;
+    })
     builder.addCase(removePost.pending, (state, action)=>{
       state.removePostLoading = true;
       state.removePostDone = false;
       state.removePostError = null;
     })
     builder.addCase(removePost.fulfilled, (state, action)=>{
-      state.mainPosts = state.mainPosts.filter((post) => post.id !== action.payload);
+      state.mainPosts = state.mainPosts.filter((post) => post.id !== action.payload.id);
       state.removePostLoading = false;
       state.removePostDone = true;
     })
@@ -122,9 +147,9 @@ const postSlice = createSlice({
       state.addCommentError = null;
     })
     builder.addCase(addComment.fulfilled, (state, action)=>{
-      const addCommentToPost = state.mainPosts.find((post) => post.id == action.payload.PostId);
-      if (addCommentToPost){
-        addCommentToPost.Comments.unshift(action.payload);
+      const post = state.mainPosts.find((post) => post.id == action.payload.PostId);
+      if (post){
+        post.Comments.unshift(action.payload);
         state.addCommentLoading = false;
         state.addCommentDone = true;
       }
@@ -133,15 +158,36 @@ const postSlice = createSlice({
       state.addCommentLoading = false;
       state.addCommentError = action.payload;
     })
+    builder.addCase(editComment.pending, (state, action)=>{
+      state.editCommentLoading = true;
+      state.editCommentDone = false;
+      state.editCommentError = null;
+    })
+    builder.addCase(editComment.fulfilled, (state, action)=>{
+      const post = state.mainPosts.find((post) => post.id == action.payload.PostId);
+      if (post){
+        const comment = post.Comments.find((comment) => comment.id == action.payload.id);
+        if (comment){
+          comment.content = action.payload.content;
+          comment.updatedAt = action.payload.updatedAt;
+          state.editCommentLoading = false;
+          state.editCommentDone = true;
+        }
+      }
+    })
+    builder.addCase(editComment.rejected, (state, action)=>{
+      state.editCommentLoading = false;
+      state.editCommentError = action.payload;
+    })
     builder.addCase(removeComment.pending, (state, action)=>{
       state.removeCommentLoading = true;
       state.removeCommentDone = false;
       state.removeCommentError = null;
     })
     builder.addCase(removeComment.fulfilled, (state, action)=>{
-      const removeCommentOfPost = state.mainPosts.find((post) => post.id === action.payload.PostId);
-      if (removeCommentOfPost){
-        removeCommentOfPost.Comments = removeCommentOfPost.Comments.filter((comment) => comment.id !== action.payload.id);
+      const post = state.mainPosts.find((post) => post.id === action.payload.PostId);
+      if (post){
+        post.Comments = removeCommentOfPost.Comments.filter((comment) => comment.id !== action.payload.id);
         state.removeCommentLoading = false;
         state.removeCommentDone = true;
       }
@@ -156,9 +202,9 @@ const postSlice = createSlice({
       state.likePostError = null;
     })
     builder.addCase(likePost.fulfilled, (state, action)=>{
-      const likeToPost = state.mainPosts.find((post) => post.id === action.payload.PostId);
-      if (likeToPost){
-        likeToPost.Likes.unshift(action.payload);
+      const post = state.mainPosts.find((post) => post.id === action.payload.PostId);
+      if (post){
+        post.Likers.unshift({ id: action.payload.UserId });
         state.likePostLoading = false;
         state.likePostDone = true;
       }
@@ -173,9 +219,9 @@ const postSlice = createSlice({
       state.unlikePostError = null;
     })
     builder.addCase(unlikePost.fulfilled, (state, action)=>{
-      const unlikeOfPost = state.mainPosts.find((post) => post.id === action.payload.PostId);
-      if (unlikeOfPost){
-        unlikeOfPost.Likes = unlikeOfPost.Likes.filter((like) => like.userId !== action.payload.UserId);
+      const post = state.mainPosts.find((post) => post.id === action.payload.PostId);
+      if (post){
+        post.Likers = unlikeOfPost.Likers.filter((like) => like.id !== action.payload.UserId);
         state.unlikePostLoading = false;
         state.unlikePostDone = true;
       }
@@ -200,7 +246,7 @@ export const getDummyPosts = (number) => Array(number).fill().map((post, index) 
     alt: "cat"
   }],
   Comments: [],
-  Likes: []
+  Likers: []
 }))
 
 export const postMyDummyPost = (payload, id) => ({
@@ -216,7 +262,7 @@ export const postMyDummyPost = (payload, id) => ({
     alt: `Cat_0${index}`
   })),
   Comments: [],
-  Likes: []
+  Likers: []
 })
 
 export const postMyDummyComment = (payload, id) => ({
