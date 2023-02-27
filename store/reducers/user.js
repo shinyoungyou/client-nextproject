@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
-import { loadMyInfo, logIn, logOut, signUp, follow, unfollow, changeNickname } from "../thunks/user";
+import { loadMyInfo, logIn, logOut, signUp, follow, unfollow, changeUsername } from "../thunks/user";
 
 const userSlice = createSlice({
   name: 'user',
@@ -23,9 +23,9 @@ const userSlice = createSlice({
     unfollowLoading: false,
     unfollowDone: false,
     unfollowError: null,
-    changeNicknameLoading: false,
-    changeNicknameDone: false,
-    changeNicknameError: null,
+    changeUsernameLoading: false,
+    changeUsernameDone: false,
+    changeUsernameError: null,
     profileMenu: 0,
     my: null,
     User: []
@@ -35,7 +35,7 @@ const userSlice = createSlice({
       state.my.Posts.unshift({ id: action.payload });
     },
     removePostToMe(state, action) {
-      state.my.Posts = state.my.Posts.filter((post) => post.id !== action.payload);
+      state.my.Posts = state.my.Posts.filter((post) => post.id !== action.payload.id);
     },
     navigateProfile(state, action){
       state.profileMenu = action.payload
@@ -131,18 +131,19 @@ const userSlice = createSlice({
       state.unfollowLoading = false;
       state.unfollowError = action.payload;
     })
-   builder.addCase(changeNickname.pending, (state, action)=>{
-      state.changeNicknameLoading = true;
-      state.changeNicknameDone = false;
-      state.changeNicknameError = null;
+   builder.addCase(changeUsername.pending, (state, action)=>{
+      state.changeUsernameLoading = true;
+      state.changeUsernameDone = false;
+      state.changeUsernameError = null;
     })
-   builder.addCase(changeNickname.fulfilled, (state, action)=>{
-      state.changeNicknameLoading = false;
-      state.changeNicknameDone = true;
+   builder.addCase(changeUsername.fulfilled, (state, action)=>{
+      state.my.username = action.payload.username;
+      state.changeUsernameLoading = false;
+      state.changeUsernameDone = true;
     })
-   builder.addCase(changeNickname.rejected, (state, action)=>{
-      state.changeNicknameLoading = false;
-      state.changeNicknameError = action.payload;
+   builder.addCase(changeUsername.rejected, (state, action)=>{
+      state.changeUsernameLoading = false;
+      state.changeUsernameError = action.payload;
     })
   }
 })
