@@ -1,4 +1,5 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { loadFollowings, loadFollowers } from "../store/thunks/user";
 import Head from "next/head";
 import { useRouter } from 'next/router'
 import { useEffect } from "react";
@@ -14,9 +15,16 @@ const Profile: NextPage = () => {
   const { my } = useSelector((state: RootState)=>state.user);
   const router = useRouter();
 
+  const dispatch = useDispatch();
+
   useEffect(()=>{
     if(!my) router.push('/')
-  }, [my])
+  }, [my]);
+
+  useEffect(()=>{
+    dispatch(loadFollowings());
+    dispatch(loadFollowers());
+  }, []);
 
   return (
     <>
