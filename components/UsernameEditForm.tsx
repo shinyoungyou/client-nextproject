@@ -4,13 +4,14 @@ import RootState from '../store/state-types';
 import React, { useState, useEffect } from 'react';
 
 import { Box, Button, Input, InputLabel, InputAdornment, FormControl } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
 interface UsernameEditFormProps {
 }
 
 const UsernameEditForm: React.FC<UsernameEditFormProps> = () => {
-  const { changeUsernameDone } = useSelector((state: RootState)=>state.user);
+  const { changeUsernameLoading, changeUsernameDone, changeUsernameError } = useSelector((state: RootState)=>state.user);
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
@@ -20,6 +21,12 @@ const UsernameEditForm: React.FC<UsernameEditFormProps> = () => {
       setUsername("");
     }
   }, [changeUsernameDone])
+
+  useEffect(()=>{
+    if(changeUsernameError){
+      alert(changeUsernameError);
+    }
+  }, [changeUsernameError])
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     setUsername(e.target.value);
@@ -49,7 +56,7 @@ const UsernameEditForm: React.FC<UsernameEditFormProps> = () => {
           />
         </FormControl>
         <Box sx={{ '& > :not(style)': { m: 1 } }}>
-          <Button type="submit" variant="contained">Edit</Button>
+          <LoadingButton type="submit" variant="contained" loading={changeUsernameLoading}>Edit</LoadingButton>
         </Box>
       </form>
     </Box>
