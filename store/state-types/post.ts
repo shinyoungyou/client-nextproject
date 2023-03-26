@@ -29,6 +29,9 @@ export default interface PostState {
     unlikePostLoading: boolean;
     unlikePostDone: boolean;
     unlikePostError: string | null;
+    uploadImagesLoading: boolean;
+    uploadImagesDone: boolean;
+    uploadImagesError: string | null;
     mainPosts: Post[];
     imagePaths: ImagePath[];
 }

@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from 'next-redux-wrapper';
-import { loadPosts, addPost, editPost, removePost,
-  addComment, editComment, removeComment, likePost, unlikePost } from "../thunks/post";
+import {
+  loadPosts, addPost, editPost, removePost,
+  addComment, editComment, removeComment, likePost, unlikePost, uploadImages
+} from "../thunks/post";
 
 import shortId from 'shortid';
 import { faker } from '@faker-js/faker/locale/en_CA';
@@ -37,6 +39,9 @@ const postSlice = createSlice({
     unlikePostLoading: false,
     unlikePostDone: false,
     unlikePostError: null,
+    uploadImagesLoading: false,
+    uploadImagesDone: false,
+    uploadImagesError: null,
     mainPosts: [],
     imagePaths: [
       {
@@ -229,7 +234,24 @@ const postSlice = createSlice({
     builder.addCase(unlikePost.rejected, (state, action)=>{
       state.unlikePostLoading = false;
       state.unlikePostError = action.payload;
-    })    
+    })
+    builder.addCase(uploadImages.pending, (state, action)=>{
+      state.uploadImagesLoading = true;
+      state.uploadImagesDone = false;
+      state.uploadImagesError = null;
+    })
+    builder.addCase(uploadImages.fulfilled, (state, action)=>{
+      const post = state.mainPosts.find((post) => post.id == action.payload.PostId);
+      if (post){
+        post.Comments.unshift(action.payload);
+        state.uploadImagesLoading = false;
+        state.uploadImagesDone = true;
+      }
+    })
+    builder.addCase(uploadImages.rejected, (state, action)=>{
+      state.uploadImagesLoading = false;
+      state.uploadImagesError = action.payload;
+    })
   }
 })
 

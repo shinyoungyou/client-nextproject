@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { addPost } from '../store/thunks/post';
+import { addPost, uploadImages } from '../store/thunks/post';
 import React, { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import RootState from "../store/state-types";
 import { ImagePath } from "../store/state-types/post";
@@ -37,7 +37,7 @@ const PostForm: React.FC = () => {
   //   setImages([images.filter((index) => index != targetIndex)]);
   // }, [targetIndex>-1])
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImagePreview = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files){
       for (let i = 0; files?.length > i; i++) {
@@ -50,6 +50,16 @@ const PostForm: React.FC = () => {
       }
     }
   }
+
+  const onChangeImages = (e) => {
+    console.log('images', e.target.files);
+    const imageFormData = new FormData();
+    [].forEach.call(e.taret.files, (file) => {
+      imageFormData.append('image', file);
+    })
+    dispatch(uploadImages());
+  }
+
   // const handleImageDelete = (index) => {
   //
   // }
@@ -76,7 +86,7 @@ const PostForm: React.FC = () => {
               <Box sx={{ display: 'flex', gap: 0.5 }}>
                 <Tooltip title="Media" placement="top">
                 <IconButton variant="outlined" sx={{ borderColor: '#D8D8DF' }} color="neutral" aria-label="upload picture" component="label">
-                  <input hidden accept="image/*" multiple type="file" onChange={handleFileChange} />
+                  <input hidden accept="image/*" multiple type="file" onChange={handleChangeImagePreview} />
                   <ImageOutlinedIcon color="primary"/>
                 </IconButton>
                 </Tooltip>
