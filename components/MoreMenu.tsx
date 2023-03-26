@@ -38,9 +38,11 @@ const MoreMenu: React.FC<MoreMenuProps> = ({ item, anchorEl, setAnchorEl, open, 
 
   const handleFollowing = (item: Post | Comment) => {
     if(isFollowing){
-      dispatch(unfollow(item.User.id as string | number));
+      dispatch(unfollow(item.User));
     } else {
       dispatch(follow(item.User));
+      console.log(item.User);
+      console.log(item.User.id);
     }
   }
 
