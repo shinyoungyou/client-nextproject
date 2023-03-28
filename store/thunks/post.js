@@ -22,6 +22,18 @@ export const loadPosts = createAsyncThunk('post/loadPosts', async (payload, thun
   }
 })
 
+export const uploadImages = createAsyncThunk('post/uploadImages', async (payload, thunkAPI) => {
+  try {
+    const response = await instance.post(`post/images/`, payload);
+    // await pause(1000);
+    // const id = shortId.generate();
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+    // return thunkAPI.fulfillWithValue(postMyDummyComment(payload, id)); // pass to extraReducer
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
+  }
+})
+
 export const addPost = createAsyncThunk('post/addPost', async (payload, thunkAPI) => {
   try {
     const response = await instance.post('post/', payload);
@@ -107,14 +119,3 @@ export const unlikePost = createAsyncThunk('post/unlikePost', async (payload, th
   }
 })
 
-export const uploadImages = createAsyncThunk('post/uploadImages', async (payload, thunkAPI) => {
-  try {
-    const response = await instance.post(`post/images/`, payload);
-    // await pause(1000);
-    // const id = shortId.generate();
-    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
-    // return thunkAPI.fulfillWithValue(postMyDummyComment(payload, id)); // pass to extraReducer
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
-  }
-})

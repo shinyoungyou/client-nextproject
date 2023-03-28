@@ -5,6 +5,9 @@ export default interface PostState {
     loadPostsLoading: boolean;
     loadPostsDone: boolean;
     loadPostsError: string | null;
+    uploadImagesLoading: boolean;
+    uploadImagesDone: boolean;
+    uploadImagesError: string | null;
     addPostLoading: boolean;
     addPostDone: boolean;
     addPostError: string | null;
@@ -29,9 +32,6 @@ export default interface PostState {
     unlikePostLoading: boolean;
     unlikePostDone: boolean;
     unlikePostError: string | null;
-    uploadImagesLoading: boolean;
-    uploadImagesDone: boolean;
-    uploadImagesError: string | null;
     mainPosts: Post[];
     imagePaths: ImagePath[];
 }
@@ -63,19 +63,28 @@ export interface Like {
 
 export interface Comment {
     id: number;
-    postId: number;
+    PostId: number;
     content: string;
     createdAt: string;
     updatedAt: string;
     User: Partial<User>;
 }
 
-export interface Image {
+export interface Image { // addPost
+    id: number;
     src: string;
     alt: string;
+    createdAt: string;
+    updatedAt: string;
+    PostId: number;
 }
+
+// uploadImages 하고 나서 res로 받는 { src: string; }객체 -> file = null
 
 export interface ImagePath {
     src: string;
     file: File | null;
 }
+
+// 참고: uploadImages 하기 전에 req로 Fil만 back에 줄 때 = File 객체를 씀
+// ->ImagePath 라는 interface 자체를 쓰지 않음.
