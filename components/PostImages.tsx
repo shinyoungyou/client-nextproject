@@ -16,7 +16,7 @@ const PostImages: React.FC<PostImagesProps> = ({ images }) => {
             <CardMedia
                 component="img"
                 height="100%"
-                image={images[0].src}
+                src={`http://localhost:3065/${images[0].src}`}
                 alt={images[0].alt}
             />}
 
@@ -25,7 +25,7 @@ const PostImages: React.FC<PostImagesProps> = ({ images }) => {
               {images.map((image, index) => (
                   <ImageListItem key={index}>
                     <img
-                        src={image.src}
+                        src={`http://localhost:3065/${image.src}`}
                         alt={image.alt}
                         loading="lazy"
                     />
@@ -43,21 +43,21 @@ const PostImages: React.FC<PostImagesProps> = ({ images }) => {
             >
               <ImageListItem key={0} cols={2} rows={2}>
                 <img
-                    src={images[0].src}
+                    src={`http://localhost:3065/${images[0].src}`}
                     alt={images[0].src}
                     loading="lazy"
                 />
               </ImageListItem>
               <ImageListItem key={1} cols={2} rows={1}>
                 <img
-                    src={images[1].src}
+                    src={`http://localhost:3065/${images[1].src}`}
                     alt={images[1].src}
                     loading="lazy"
                 />
               </ImageListItem>
               <ImageListItem key={2} cols={2} rows={1}>
                 <img
-                    src={images[2].src}
+                    src={`http://localhost:3065/${images[2].src}`}
                     alt={images[2].src}
                     loading="lazy"
                 />
