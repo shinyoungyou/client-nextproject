@@ -15,6 +15,9 @@ const postSlice = createSlice({
     loadPostsLoading: false,
     loadPostsDone: false,
     loadPostsError: null,
+    uploadImagesLoading: false,
+    uploadImagesDone: false,
+    uploadImagesError: null,
     addPostLoading: false,
     addPostDone: false,
     addPostError: null,
@@ -39,44 +42,8 @@ const postSlice = createSlice({
     unlikePostLoading: false,
     unlikePostDone: false,
     unlikePostError: null,
-    uploadImagesLoading: false,
-    uploadImagesDone: false,
-    uploadImagesError: null,
     mainPosts: [],
-    imagePaths: [
-      {
-    src: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Beef_curry_rice_003.jpg",
-    file: {
-      lastModified: 1670743385774,
-      lastModifiedDate: "Sat Sep 24 2022 00:23:12 GMT-0700 (Pacific Daylight Time)",
-      name: "Japanese_Curry.jpg",
-      size: 12284,
-      type: "image/jpg",
-      webkitRelativePath: ""
-    },
-  },
-    {
-      src: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Sashimi_-_Maguro_Restaurant%2C_Bangna%2C_Bangkok_%2844856596864%29.jpg",
-      file: {
-        lastModified: 1670743385774,
-        lastModifiedDate: "Sat Sep 24 2022 00:23:12 GMT-0700 (Pacific Daylight Time)",
-        name: "Salmon_Sushi.jpg",
-        size: 12284,
-        type: "image/jpg",
-        webkitRelativePath: ""
-      },
-    },
-    {
-      src: "https://upload.wikimedia.org/wikipedia/commons/e/ec/Shoyu_ramen%2C_at_Kasukabe_Station_%282014.05.05%29_1.jpg",
-      file: {
-        lastModified: 1670743385774,
-        lastModifiedDate: "Sat Sep 24 2022 00:23:12 GMT-0700 (Pacific Daylight Time)",
-        name: "Ramen.jpg",
-        size: 12284,
-        type: "image/jpg",
-        webkitRelativePath: ""
-      }
-    }],
+    imagePaths: []
   },
   extraReducers(builder) {
     // builder.addCase(HYDRATE, (state, action) => {
@@ -99,6 +66,20 @@ const postSlice = createSlice({
     builder.addCase(loadPosts.rejected, (state, action)=>{
       state.loadPostsLoading = false;
       state.loadPostsError = action.payload;
+    })
+    builder.addCase(uploadImages.pending, (state, action)=>{
+      state.uploadImagesLoading = true;
+      state.uploadImagesDone = false;
+      state.uploadImagesError = null;
+    })
+    builder.addCase(uploadImages.fulfilled, (state, action)=>{
+      state.imagePaths = action.payload;
+      state.uploadImagesLoading = false;
+      state.uploadImagesDone = true;
+    })
+    builder.addCase(uploadImages.rejected, (state, action)=>{
+      state.uploadImagesLoading = false;
+      state.uploadImagesError = action.payload;
     })
     builder.addCase(addPost.pending, (state, action)=>{
       state.addPostLoading = true;
@@ -234,23 +215,6 @@ const postSlice = createSlice({
     builder.addCase(unlikePost.rejected, (state, action)=>{
       state.unlikePostLoading = false;
       state.unlikePostError = action.payload;
-    })
-    builder.addCase(uploadImages.pending, (state, action)=>{
-      state.uploadImagesLoading = true;
-      state.uploadImagesDone = false;
-      state.uploadImagesError = null;
-    })
-    builder.addCase(uploadImages.fulfilled, (state, action)=>{
-      const post = state.mainPosts.find((post) => post.id == action.payload.PostId);
-      if (post){
-        post.Comments.unshift(action.payload);
-        state.uploadImagesLoading = false;
-        state.uploadImagesDone = true;
-      }
-    })
-    builder.addCase(uploadImages.rejected, (state, action)=>{
-      state.uploadImagesLoading = false;
-      state.uploadImagesError = action.payload;
     })
   }
 })
