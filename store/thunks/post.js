@@ -13,7 +13,7 @@ const pause = (duration) => {
 
 export const loadPosts = createAsyncThunk('post/loadPosts', async (payload, thunkAPI) => {
   try {
-    const response = await instance.get('posts/');
+    const response = await instance.get(`posts?lastId=${payload.lastId}`);
     // await pause(1000);
     return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
     // return thunkAPI.fulfillWithValue(getDummyPosts(10)); // pass to extraReducer
@@ -118,4 +118,31 @@ export const unlikePost = createAsyncThunk('post/unlikePost', async (payload, th
     return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
   }
 })
+
+export const retweet = createAsyncThunk('post/retweet', async (payload, thunkAPI) => {
+  try {
+    const response = await instance.post(`post/${payload.id}/retweet`, payload);
+    // await pause(1000);
+    // const id = shortId.generate();
+    thunkAPI.dispatch(addPostToMe(response.data.id));
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+    // return thunkAPI.fulfillWithValue(postMyDummyPost(payload, id)); // pass to extraReducer
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
+  }
+})
+
+export const undoRetweet = createAsyncThunk('post/undoRetweet', async (payload, thunkAPI) => {
+  try {
+    const response = await instance.delete(`post/${payload.id}/retweet`);
+    // await pause(1000);
+    thunkAPI.dispatch(removePostToMe(response.data));
+    return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
+    // return thunkAPI.fulfillWithValue(payload); // pass to extraReducer
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response.data); // pass to extraReducer
+  }
+})
+
+
 

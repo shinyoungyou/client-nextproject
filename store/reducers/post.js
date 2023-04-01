@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from 'next-redux-wrapper';
 import {
   loadPosts, addPost, editPost, removePost,
-  addComment, editComment, removeComment, likePost, unlikePost, uploadImages
+  addComment, editComment, removeComment,
+  likePost, unlikePost, uploadImages,
+  retweet, undoRetweet
 } from "../thunks/post";
 
 import shortId from 'shortid';
@@ -42,6 +44,9 @@ const postSlice = createSlice({
     unlikePostLoading: false,
     unlikePostDone: false,
     unlikePostError: null,
+    retweetLoading: false,
+    retweetDone: false,
+    retweetError: null,
     mainPosts: [],
     imagePaths: []
   },
@@ -215,6 +220,34 @@ const postSlice = createSlice({
     builder.addCase(unlikePost.rejected, (state, action)=>{
       state.unlikePostLoading = false;
       state.unlikePostError = action.payload;
+    })
+    builder.addCase(retweet.pending, (state, action)=>{
+      state.retweetLoading = true;
+      state.retweetDone = false;
+      state.retweetError = null;
+    })
+    builder.addCase(retweet.fulfilled, (state, action)=>{
+      state.mainPosts.unshift(action.payload);
+      state.retweetLoading = false;
+      state.retweetDone = true;
+    })
+    builder.addCase(retweet.rejected, (state, action)=>{
+      state.retweetLoading = false;
+      state.retweetError = action.payload;
+    })
+    builder.addCase(undoRetweet.pending, (state, action)=>{
+      state.undoRetweetLoading = true;
+      state.undoRetweetDone = false;
+      state.undoRetweetError = null;
+    })
+    builder.addCase(undoRetweet.fulfilled, (state, action)=>{
+      state.mainPosts = state.mainPosts.filter((post) => post.id !== action.payload.id);
+      state.undoRetweetLoading = false;
+      state.undoRetweetDone = true;
+    })
+    builder.addCase(undoRetweet.rejected, (state, action)=>{
+      state.undoRetweetLoading = false;
+      state.undoRetweetError = action.payload;
     })
   }
 })

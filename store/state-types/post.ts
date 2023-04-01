@@ -32,6 +32,12 @@ export default interface PostState {
     unlikePostLoading: boolean;
     unlikePostDone: boolean;
     unlikePostError: string | null;
+    retweetLoading: boolean;
+    retweetDone: boolean;
+    retweetError: string | null;
+    undoRetweetLoading: boolean;
+    undoRetweetDone: boolean;
+    undoRetweetError: string | null;
     mainPosts: Post[];
     imagePaths: ImagePath[];
 }
@@ -41,24 +47,14 @@ export interface Post {
     content: string;
     createdAt: string;
     updatedAt: string;
-    User: Partial<User>,
-    Likers: Liker[] | [];
-    // RetweetId?: number;
-    // Retweet: [];
     Images: Image[] | [];
-    Comments: Comment[] | [];
-}
-
-export interface Liker {
-    id: number;
-    Like: Like | null; // loadPosts가 아닌 경우 = null
-
-}
-export interface Like {
     UserId: number;
-    PostId: number;
-    createdAt: string;
-    updatedAt: string;
+    User: Partial<User>;
+    Comments: Comment[] | [];
+    Likers: Liker[] | [];
+    RetweetId: number | null;
+    Retweet: Post | null;
+
 }
 
 export interface Comment {
@@ -88,3 +84,15 @@ export interface ImagePath {
 
 // 참고: uploadImages 하기 전에 req로 Fil만 back에 줄 때 = File 객체를 씀
 // ->ImagePath 라는 interface 자체를 쓰지 않음.
+
+export interface Liker {
+    id: number;
+    Like: Like | null; // loadPosts가 아닌 경우 = null
+
+}
+export interface Like {
+    UserId: number;
+    PostId: number;
+    createdAt: string;
+    updatedAt: string;
+}
