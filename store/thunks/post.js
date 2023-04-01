@@ -13,7 +13,7 @@ const pause = (duration) => {
 
 export const loadPosts = createAsyncThunk('post/loadPosts', async (payload, thunkAPI) => {
   try {
-    const response = await instance.get(`posts?lastId=${payload.lastId}`);
+    const response = await instance.get(`posts?lastId=${payload?.lastId || 0}`);
     // await pause(1000);
     return thunkAPI.fulfillWithValue(response.data); // pass to extraReducer
     // return thunkAPI.fulfillWithValue(getDummyPosts(10)); // pass to extraReducer
