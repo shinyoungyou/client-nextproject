@@ -1,10 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { editPost, removePost, likePost, unlikePost } from '../store/thunks/post'
 import React, { useState, useEffect, MouseEvent, BaseSyntheticEvent } from 'react';
+import Link from "next/link";
 import RootState from "../store/state-types";
 import { Post } from '../store/state-types/post';
 
 import MoreMenu from "./MoreMenu";
+import RetweetMenu from "./RetweetMenu";
 import PostImages from './PostImages'
 import CommentForm from './CommentForm';
 import CommentListItem from './CommentListItem';
@@ -31,13 +33,14 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 
 interface PostCardProps {
-  post: Post
+  post: Post;
+  retweetingPostId: number | null;
 }
 
 
-const PostCard: React.FC<PostCardProps> = ({ post }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, retweetingPostId }) => {
   const my = useSelector((state: RootState) => state.user.my);
-  const { editPostDone, editPostLoading, removePostLoading } = useSelector((state: RootState) => state.post);
+  const { mainPosts, editPostDone, editPostLoading, removePostLoading } = useSelector((state: RootState) => state.post);
   const dispatch = useDispatch();
 
   const [editStatus, setEditStatus] = useState("beforeEdit");
@@ -45,23 +48,32 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
 
   const [expanded, setExpanded] = useState(false);
 
+  const retweetingPost = mainPosts.find((retweetingPost)=> retweetingPost.id == retweetingPostId);
+  const retweetedTimes = mainPosts.filter((retweetingPost)=> retweetingPost.RetweetId == post.id).length;
+  const isRetweetedByMe = post.RetweetId && post.UserId == my?.id || mainPosts.find(mainPost => post.id == mainPost.RetweetId && mainPost.UserId == my?.id);
+
   useEffect(()=>{
     if(editPostDone){
       setEditStatus("beforeEdit");
     }
-  }, [editPostDone])
+  }, [editPostDone]);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
   const [anchorEl, setAnchorEl] = useState<BaseSyntheticEvent["currentTarget"]>(null);
+  const [retweetEl, setRetweetEl] = useState<BaseSyntheticEvent["currentTarget"]>(null);
 
   const open = Boolean(anchorEl);
+  const openRetweet = Boolean(retweetEl);
   // MouseEvent<HTMLButtonElement, MouseEvent>
   // BaseSyntheticEvent<HTMLButtonElement>.currentTarget
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleRetweetButton = (event: MouseEvent<HTMLButtonElement>) => {
+    setRetweetEl(event.currentTarget);
   };
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -93,6 +105,7 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
   }
 
   return (<Card sx={{m: 1, mb: 3}}>
+    {retweetingPostId && <Link href="/"><a><RepeatIcon/>{retweetingPost?.User.username == my?.username ? "You" : retweetingPost?.User.username} Retweeted</a></Link>}
     <CardHeader
         avatar={
           <Avatar
@@ -149,17 +162,28 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
     <CardActions disableSpacing>
       <Tooltip title={isLiked ? "Unlike": "Like"}>
         <IconButton onClick={()=>handleLikeButton(post)} aria-label="add to favorites" sx={{ py: 0, fontSize: "inherit", "&:hover": { color: "#F91880", bgcolor: 'transparent' } }}>
-          <IconButton  sx={{ color: "inherit", "&:hover": { bgcolor: 'rgba(249, 24, 128, 0.1)' } }}>
+          <IconButton sx={{ color: "inherit", "&:hover": { bgcolor: 'rgba(249, 24, 128, 0.1)' } }}>
             <FavoriteBorderIcon/>
           </IconButton>
           {post.Likers?.length > 0 ? post.Likers.length : 0}
         </IconButton>
       </Tooltip>
-      <Tooltip title="Retweet">
-        <IconButton aria-label="retweet">
-          <RepeatIcon/>
-        </IconButton>
-      </Tooltip>
+      <>
+        <Tooltip title={isRetweetedByMe ? "Undo Retweet" : "Retweet"}>
+          <IconButton onClick={handleRetweetButton} aria-label="retweet" sx={{ py: 0, fontSize: "inherit", "&:hover": { color: "#53b781", bgcolor: 'transparent' } }}>
+            <IconButton sx={{ color: "inherit", "&:hover": { bgcolor: '#e6f1eb' } }}>
+              <RepeatIcon/>
+            </IconButton>
+            {retweetedTimes}
+          </IconButton>
+        </Tooltip>
+        <RetweetMenu
+            post={post}
+            anchorEl={retweetEl}
+            setAnchorEl={setRetweetEl}
+            open={openRetweet}
+        />
+      </>
       <Tooltip title="Reply">
         <ExpandMore
             expand={expanded}
