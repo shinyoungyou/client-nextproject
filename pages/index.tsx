@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { loadMyInfo } from "../store/thunks/user";
 import { loadPosts } from "../store/thunks/post";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import type { NextPage } from 'next';
 import RootState from "../store/state-types";
 
@@ -13,6 +13,8 @@ const Home: NextPage = () => {
   const { my } = useSelector((state: RootState)=>state.user);
   const { mainPosts, loadPostsLoading, bringMorePosts } = useSelector((state: RootState)=>state.post);
   const dispatch = useDispatch();
+
+  const [prevLastId, setPrevLastId] = useState<number>(-1);
 
   useEffect(()=>{
     if(mainPosts.length < 10){
@@ -26,9 +28,12 @@ const Home: NextPage = () => {
     const handleScroll = () => {
       if(window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300){
         if(!loadPostsLoading && bringMorePosts){
-          dispatch(loadPosts({
-            lastId: mainPosts[mainPosts.length - 1].id
-          }));
+          if(prevLastId != mainPosts[mainPosts.length - 1]?.id){
+            dispatch(loadPosts({
+              lastId: mainPosts[mainPosts.length - 1]?.id
+            }));
+          }
+          setPrevLastId(mainPosts[mainPosts.length - 1]?.id);
         }
       }
     }
