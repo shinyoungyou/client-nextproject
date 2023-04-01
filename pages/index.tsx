@@ -1,13 +1,14 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { loadMyInfo } from "../store/thunks/user";
 import { loadPosts } from "../store/thunks/post";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import type { NextPage } from 'next';
 import RootState from "../store/state-types";
 
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
+import Link from "next/link";
 const Home: NextPage = () => {
   const { my } = useSelector((state: RootState)=>state.user);
   const { mainPosts, loadPostsLoading, bringMorePosts } = useSelector((state: RootState)=>state.post);
@@ -23,9 +24,11 @@ const Home: NextPage = () => {
 
   useEffect(()=>{
     const handleScroll = () => {
-      if(window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 700){
+      if(window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300){
         if(!loadPostsLoading && bringMorePosts){
-          dispatch(loadPosts());
+          dispatch(loadPosts({
+            lastId: mainPosts[mainPosts.length - 1].id
+          }));
         }
       }
     }
@@ -40,7 +43,7 @@ const Home: NextPage = () => {
   return (
     <AppLayout>
       {my && <PostForm/>}
-      {mainPosts.map((post)=>(<PostCard post={post} key={post.id} />))}
+      {mainPosts.map((post)=>(post.Retweet ? <PostCard post={post.Retweet} retweetingPostId={post.id} key={post.id} /> : <PostCard post={post} retweetingPostId={null} key={post.id} />))}
     </AppLayout>
   )
 }
