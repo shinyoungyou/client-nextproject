@@ -14,14 +14,14 @@ const FollowList: React.FC<FollowListProps> = ({ header, item }) => {
   const [checked, setChecked] = useState([1]);
   const [targetIndex, setTargetIndex] = useState(-1);
 
-  const handleUnfollow = (user: User) => {
+  const handleUnfollow = (user: Partial<User>) => {
     if (header=="Followings") {
       console.log("Followings")
-      dispatch(unfollow(user));
+      dispatch(unfollow({ id: user.id as number }));
     }
     if (header=="Followers") {
       console.log("Followers")
-      dispatch(removeFollower(user));
+      dispatch(removeFollower({ id: user.id as number }));
     }
   }
 

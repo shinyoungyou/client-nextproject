@@ -38,11 +38,9 @@ const MoreMenu: React.FC<MoreMenuProps> = ({ item, anchorEl, setAnchorEl, open, 
 
   const handleFollowing = (item: Post | Comment) => {
     if(isFollowing){
-      dispatch(unfollow(item.User));
+      dispatch(unfollow({ id: item.User.id as number }));
     } else {
       dispatch(follow(item.User));
-      console.log(item.User);
-      console.log(item.User.id);
     }
   }
 
@@ -76,7 +74,7 @@ const MoreMenu: React.FC<MoreMenuProps> = ({ item, anchorEl, setAnchorEl, open, 
               Cancel
             </LoadingButton>
           </MenuItem>}
-          <MenuItem key="Delete" onClick={handleDelete} variant="soft" color="danger">
+          <MenuItem key="Delete" onClick={handleDelete}>
             <LoadingButton loading={removeLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit"  }}>
               <ListItemDecorator sx={{color: 'inherit'}}>
                 <DeleteIcon/>

@@ -33,14 +33,14 @@ const RetweetMenu: React.FC<RetweetMenuProps> = ({ post, anchorEl, setAnchorEl, 
   const retweetingPostId = isOriginalPost?.id; // the id of the post which is retweeting the original one.
 
   const handleRetweet = (post: Post) => {
-    if(!my) return alert('로그인이 필요합니다.');
+    if(my === null) return alert('로그인이 필요합니다.');
     if(isRetweetedByMe){
       dispatch(undoRetweet({
-          id: isOriginalPost ? retweetingPostId : post.id
+        id: isOriginalPost ? retweetingPostId as number : post.id
       }));
     } else if(isRetweetedByOthers){
       dispatch(retweet({
-          id: isOriginalPost ? post.id : post.RetweetId
+        id: isOriginalPost ? post.id : post.RetweetId as number
       }));
     } else {
       dispatch(retweet({
@@ -61,7 +61,7 @@ const RetweetMenu: React.FC<RetweetMenuProps> = ({ post, anchorEl, setAnchorEl, 
       >
           <MenuItem key={isRetweetedByMe ?"Undo Retweet" : "Retweet"} onClick={()=>handleRetweet(post)} disableRipple>
             <LoadingButton loading={isRetweetedByMe ? undoRetweetLoading : retweetLoading} sx={{ p: 0, color: "inherit", textTransform: "inherit", fontSize: "inherit" }}>
-              <ListItemDecorator sx={{color: 'inherit'}}>
+              <ListItemDecorator sx={{ color: 'inherit' }}>
                 <RepeatIcon/>
               </ListItemDecorator>{' '}
               {isRetweetedByMe ? "Undo Retweet" : "Retweet"}

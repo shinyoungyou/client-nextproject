@@ -36,6 +36,7 @@ const UsernameEditForm: React.FC<UsernameEditFormProps> = () => {
     e.preventDefault();
     dispatch(changeUsername({ username }));
   }
+
   return (
     <Box sx={{ '& > :not(style)': { m: 1 }, width: '100%' }}>
       <form onSubmit={handleSubmit} style={{ display: 'flex' }}>
