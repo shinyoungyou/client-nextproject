@@ -1,9 +1,11 @@
+import wrapper from '../store';
 import { useSelector, useDispatch } from 'react-redux';
 import { loadMyInfo } from "../store/thunks/user";
 import { loadPosts } from "../store/thunks/post";
 import React, { useState, useEffect } from "react";
 import type { NextPage } from 'next';
 import RootState from "../store/state-types";
+import axios from "axios";
 
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
@@ -16,13 +18,13 @@ const Home: NextPage = () => {
 
   const [prevLastId, setPrevLastId] = useState<number>(-1);
 
-  useEffect(()=>{
-    if(mainPosts.length < 10){
-      dispatch(loadMyInfo());
-      dispatch(loadPosts());
-    }
-    console.log("loadPosts")
-  }, [])
+  // useEffect(()=>{
+  //   if(mainPosts.length < 10){
+  //     dispatch(loadMyInfo());
+  //     dispatch(loadPosts());
+  //   }
+  //   console.log("loadPosts")
+  // }, [])
 
   useEffect(()=>{
     const handleScroll = () => {
@@ -47,10 +49,21 @@ const Home: NextPage = () => {
 
   return (
     <AppLayout>
-      {my && <PostForm/>}
-      {mainPosts.map((post)=>(post.Retweet ? <PostCard post={post.Retweet} retweetingPostId={post.id} key={post.id} /> : <PostCard post={post} retweetingPostId={null} key={post.id} />))}
+      {my !== null && <PostForm/>}
+      {mainPosts.map((post)=>(post.Retweet ? <PostCard post={post.Retweet} posts={mainPosts} retweetingPostId={post.id} key={post.id} /> : <PostCard post={post} posts={mainPosts} retweetingPostId={null} key={post.id} />))}
     </AppLayout>
   )
 }
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  if (cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  await context.store.dispatch(loadMyInfo());
+  await context.store.dispatch(loadPosts({}));
+  // console.log(context.req);
+});
 
 export default Home;
