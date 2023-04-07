@@ -29,7 +29,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ post }) => {
   const addEmoji = (emoji: string) => () => setText(`${text}${emoji}`);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addComment({ content: text, postId: post.id, userId: my?.id as number | string, User: my as User  }));
+    dispatch(addComment({ content: text, postId: post.id, userId: my?.id as number, User: my as User  }));
   }
   return (
       <Box sx={{ m: 1 }}>

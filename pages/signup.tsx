@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { signUp } from '../store/thunks/user';
+import { loadMyInfo, signUp } from '../store/thunks/user';
 import Head from "next/head";
 import { useRouter } from 'next/router'
 import { useState, useEffect, useCallback, MouseEvent, ChangeEvent, FormEvent } from "react";
@@ -21,6 +21,9 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { LoadingButton } from '@mui/lab';
+import wrapper from "../store";
+import axios from "axios";
+import {loadPosts} from "../store/thunks/post";
 
 const Signup: NextPage = () => {
   const dispatch = useDispatch();
@@ -40,10 +43,9 @@ const Signup: NextPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  useEffect(()=>{
-    if(my){
-      router.replace('/');
-    }
+  useEffect(() => {
+    if ((my !== null) && my.id) router.replace('/');
+    return;
   }, [my])
 
   useEffect(()=>{
@@ -55,7 +57,7 @@ const Signup: NextPage = () => {
         passCheck: "",
         term: ""
       })
-      router.push('/');
+      router.replace('/');
     }
   }, [signUpDone])
 
@@ -66,11 +68,6 @@ const Signup: NextPage = () => {
     }
   }, [signUpError])
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
-  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
   useEffect(()=>{
     if (pass !== passCheck){
       setPassError(true);
@@ -79,6 +76,11 @@ const Signup: NextPage = () => {
       setPassError(false);
     }
   }, [form])
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleMouseDownPassword = (event: MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     // const { name, value } = e.target; // 비구조화 할당 한 name와 value는 read-only라서 name 또는 value의 값을 바꿀 수 없다.
@@ -209,5 +211,15 @@ const Signup: NextPage = () => {
     </>
   )
 }
+
+export const getServerSideProps = wrapper.getServerSideProps(async (context)=>{
+  const cookie = context.req ? context.req.headers.cookie : '';
+  axios.defaults.headers.Cookie = '';
+  if (cookie) {
+    axios.defaults.headers.Cookie = cookie;
+  }
+  await context.store.dispatch(loadMyInfo());
+  // console.log(context.req);
+});
 
 export default Signup;

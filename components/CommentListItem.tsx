@@ -1,8 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { editComment, removeComment } from "../store/thunks/post";
-import React, {useState, MouseEvent, BaseSyntheticEvent, useEffect} from "react";
+import React, { useState, MouseEvent, BaseSyntheticEvent, useEffect } from "react";
 import RootState from "../store/state-types";
-import {Comment, Post} from '../store/state-types/post';
+import { Comment } from '../store/state-types/post';
 
 import MoreMenu from './MoreMenu';
 import { EditContent } from '../styles/styled-components'
@@ -61,15 +61,15 @@ const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
       }
     }
 
-  const handleDeleteComment = () => {
-    dispatch(removeComment({ postId: comment.PostId, id: comment.id }));
+  const handleDeleteComment = (comment: Comment) => {
+    dispatch(removeComment({ postId: comment.PostId as number, id: comment.id }));
   }
 
   return (
       <>
         <ListItem key={comment.id}
           secondaryAction={
-            my && <>
+              my !== null && <>
               <Tooltip title="More">
                 <IconButton
                   aria-label="more"
@@ -100,7 +100,7 @@ const CommentListItem: React.FC<CommentListItemProps> = ({ comment }) => {
             <Avatar alt={comment.User.username} src="/static/images/avatar/1.jpg"/>
           </ListItemAvatar>
           <ListItemText
-              sx={{m: 1}}
+              sx={{ m: 1 }}
               primary={comment.User.username}
               secondary={editStatus === "editing"
                   ?

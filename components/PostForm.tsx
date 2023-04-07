@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { addPost } from '../store/thunks/post';
+import { addPost, uploadImages } from '../store/thunks/post';
 import React, { useState, useEffect, FormEvent, ChangeEvent } from 'react';
 import RootState from "../store/state-types";
 import { ImagePath } from "../store/state-types/post";
@@ -22,22 +22,27 @@ const PostForm: React.FC = () => {
   const [images, setImages] = useState<ImagePath[] | []>([]);
 
   useEffect(()=>{
+    if(imagePaths.length > 0){
+      dispatch(addPost({
+        content: text,
+        images: imagePaths
+      }));
+    }
+  }, [imagePaths])
+
+  useEffect(()=>{
     if(addPostDone){
       setText('');
+      setImages([]);
     }
   }, [addPostDone])
 
-  const [targetIndex, setTargetIndex] = useState(-1);
   useEffect(()=>{
     console.log(images);
   }, [images])
   const addEmoji = (emoji: string) => () => setText(`${text}${emoji}`);
-  // useEffect(()=>{
-  //   console.log(targetIndex);
-  //   setImages([images.filter((index) => index != targetIndex)]);
-  // }, [targetIndex>-1])
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChangeImagePreview = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.target;
     if (files){
       for (let i = 0; files?.length > i; i++) {
@@ -50,18 +55,24 @@ const PostForm: React.FC = () => {
       }
     }
   }
-  // const handleImageDelete = (index) => {
-  //
-  // }
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    dispatch(addPost({
-      content: text,
-      userId: my?.id as number | string,
-      User: my as User
-    }));
+  const handleRemoveImagePreview = (lastModified: number) => {
+    setImages((prev) => prev.filter((image) => lastModified !== image.file?.lastModified))
   }
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!text && images.length == 0) return alert('게시글을 작성하세요.');
+
+    if (text && images.length == 0) return dispatch(addPost({ content: text }));
+
+    const formData = new FormData();
+    images.forEach((image) => {
+      formData.append('image', image.file as Blob)
+    })
+    dispatch(uploadImages(formData));
+  }
+
   return (
     <Box sx={{ m: 1 }}>
       <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -76,7 +87,7 @@ const PostForm: React.FC = () => {
               <Box sx={{ display: 'flex', gap: 0.5 }}>
                 <Tooltip title="Media" placement="top">
                 <IconButton variant="outlined" sx={{ borderColor: '#D8D8DF' }} color="neutral" aria-label="upload picture" component="label">
-                  <input hidden accept="image/*" multiple type="file" onChange={handleFileChange} />
+                  <input hidden accept="image/*" multiple type="file" onChange={handleChangeImagePreview} />
                   <ImageOutlinedIcon color="primary"/>
                 </IconButton>
                 </Tooltip>
@@ -104,9 +115,9 @@ const PostForm: React.FC = () => {
           endDecorator={
           <Box sx={{ width: '100%' }} >
             <ImageList sx={{ width: 500, maxHeight: 350 }} cols={3} rowHeight={164}>
-              {imagePaths.map((item, index) => (
+              {images.map((item, index) => (
                 <ImageListItem sx={{ position: 'relative' }} key={index}>
-                  <IconButton sx={{ position: 'absolute', zIndex: 1 }} onClick={()=>setTargetIndex(index)}>
+                  <IconButton sx={{ position: 'absolute', zIndex: 1 }} onClick={()=>handleRemoveImagePreview(item.file?.lastModified as number)}>
                     <ClearRoundedIcon sx={{ bgcolor: 'rgba(25, 25, 25, 0.5)', color: 'white', borderRadius: '100%', p: 0.5, my: 0.5 }} />
                   </IconButton>
                   <img

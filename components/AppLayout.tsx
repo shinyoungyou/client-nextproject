@@ -71,7 +71,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       </AppBar>
       <Grid container spacing={2}>
         <Grid item xs={12} md={3}>
-          {my ? <UserProfile /> : <LoginForm />}
+          {my !== null ? <UserProfile user={my} maxWidth={345} /> : <LoginForm />}
         </Grid>
         <Grid item xs={12} md={6}>
           {children}

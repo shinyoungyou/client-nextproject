@@ -2,14 +2,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logOut } from '../store/thunks/user';
 import { navigateProfile } from '../store/reducers/user';
 import { useRouter } from 'next/router'
-import React from 'react';
+import React, { useEffect } from 'react';
 import RootState from "../store/state-types";
+import { User } from '../store/state-types/user';
 
 import { Avatar, Box, Button, BottomNavigation, BottomNavigationAction, Card, CardHeader, CardContent, CardActions } from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { LoadingButton } from '@mui/lab';
 
-const UserProfile: React.FC = () => {
+interface UserProfileProps {
+  user: User,
+  maxWidth: number
+}
+
+const UserProfile: React.FC<UserProfileProps> = ({ user, maxWidth }) => {
   const { my, logOutLoading, profileMenu } = useSelector((state: RootState)=>state.user);
   const dispatch = useDispatch();
   const router = useRouter();
@@ -25,18 +31,16 @@ const UserProfile: React.FC = () => {
     router.push('/profile')
   }
 
-  if (!my) return null;
-
   return (
-    <Card sx={{ maxWidth: 345, margin: '8px 0' }}>
+    <Card sx={{ maxWidth, margin: '8px 0' }}>
       <CardHeader
         avatar={
-          <Avatar alt={my.username} src="/static/images/avatar/1.jpg" sx={{ bgcolor: blue[500] }} aria-label="recipe" />
+          <Avatar alt={user.username} src="/static/images/avatar/1.jpg" sx={{ bgcolor: blue[500] }} aria-label="recipe" />
         }
         action={
-          <LoadingButton onClick={handleLogout} variant="outlined" loading={logOutLoading} style={{ margin: '4px 8px' }}>Log Out</LoadingButton>
+          my?.id == user.id && <LoadingButton onClick={handleLogout} variant="outlined" loading={logOutLoading} style={{ margin: '4px 8px' }}>Log Out</LoadingButton>
         }
-        title={my.username}
+        title={user.username}
       />
       <CardActions>
       <Box sx={{ width: 500 }}>
@@ -48,9 +52,9 @@ const UserProfile: React.FC = () => {
         }}
       >
 
-        <BottomNavigationAction onClick={RedirectToHome} label="Tweets" icon={my.Posts ? my.Posts.length : 0} />
-        <BottomNavigationAction onClick={RedirectToProfile} label="Following" icon={my.Followings ? my.Followings.length: 0} />
-        <BottomNavigationAction onClick={RedirectToProfile} label="Followers" icon={my.Followers ? my.Followers.length: 0} />
+        <BottomNavigationAction onClick={RedirectToHome} label="Tweets" icon={user.Posts ? user.Posts.length : 0} />
+        <BottomNavigationAction onClick={RedirectToProfile} label="Following" icon={user.Followings ? user.Followings.length: 0} />
+        <BottomNavigationAction onClick={RedirectToProfile} label="Followers" icon={user.Followers ? user.Followers.length: 0} />
 
       </BottomNavigation>
       </Box>

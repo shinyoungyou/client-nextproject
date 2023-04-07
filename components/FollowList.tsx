@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { unfollow } from "../store/thunks/user";
+import { unfollow, removeFollower } from "../store/thunks/user";
 import React, { useState } from 'react';
 import { User } from '../store/state-types/user';
 
@@ -14,8 +14,15 @@ const FollowList: React.FC<FollowListProps> = ({ header, item }) => {
   const [checked, setChecked] = useState([1]);
   const [targetIndex, setTargetIndex] = useState(-1);
 
-  const handleUnfollow = (id: number | string) => {
-    dispatch(unfollow(id));
+  const handleUnfollow = (user: Partial<User>) => {
+    if (header=="Followings") {
+      console.log("Followings")
+      dispatch(unfollow({ id: user.id as number }));
+    }
+    if (header=="Followers") {
+      console.log("Followers")
+      dispatch(removeFollower({ id: user.id as number }));
+    }
   }
 
   return (
@@ -29,6 +36,7 @@ const FollowList: React.FC<FollowListProps> = ({ header, item }) => {
       }
     >
       {item?.length > 0 ? item.map((user, index) => {
+        console.log(item)
         const labelId = `error`;
         return (
           <ListItem
@@ -36,18 +44,19 @@ const FollowList: React.FC<FollowListProps> = ({ header, item }) => {
             secondaryAction={
             <Button 
               variant="outlined"
-              onClick={()=>handleUnfollow(user.id as number | string)}
+              onClick={()=>handleUnfollow(user)}
               onMouseEnter={()=>setTargetIndex(index)}
               onMouseLeave={()=>setTargetIndex(-1)}
               sx={{
                 width: '110px',
+                transition: '0.4s',
                 "&:hover": {
                   backgroundColor: "rgba(211, 47, 47, 0.04)",
                   border: "1px solid #d32f2f",
                   color: "#d32f2f"
                 } 
               }}
-            >{index == targetIndex ? "Unfollow" : "Following"}</Button>
+            >{index == targetIndex ? (header=="Followings" ? "Unfollow" : "Block") : (header=="Followings" ? "Following" : "Follower")}</Button>
             }
             disablePadding
           >

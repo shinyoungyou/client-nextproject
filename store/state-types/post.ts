@@ -5,9 +5,19 @@ export default interface PostState {
     loadPostsLoading: boolean;
     loadPostsDone: boolean;
     loadPostsError: string | null;
+    bringMorePostsByUser: boolean;
+    loadPostsByUserLoading: boolean;
+    loadPostsByUserDone: boolean;
+    loadPostsByUserError: string | null;
+    uploadImagesLoading: boolean;
+    uploadImagesDone: boolean;
+    uploadImagesError: string | null;
     addPostLoading: boolean;
     addPostDone: boolean;
     addPostError: string | null;
+    loadSinglePostLoading: boolean;
+    loadSinglePostDone: boolean;
+    loadSinglePostError: string | null;
     editPostLoading: boolean;
     editPostDone: boolean;
     editPostError: string | null;
@@ -29,7 +39,15 @@ export default interface PostState {
     unlikePostLoading: boolean;
     unlikePostDone: boolean;
     unlikePostError: string | null;
+    retweetLoading: boolean;
+    retweetDone: boolean;
+    retweetError: string | null;
+    undoRetweetLoading: boolean;
+    undoRetweetDone: boolean;
+    undoRetweetError: string | null;
     mainPosts: Post[];
+    postsByUser: Post[] | null;
+    singlePost: Post | null;
     imagePaths: ImagePath[];
 }
 
@@ -38,13 +56,43 @@ export interface Post {
     content: string;
     createdAt: string;
     updatedAt: string;
-    User: Partial<User>,
-    Likers: Liker[] | [];
-    // RetweetId?: number;
-    // Retweet: [];
     Images: Image[] | [];
+    UserId: number;
+    User: Partial<User>;
     Comments: Comment[] | [];
+    Likers: Liker[] | [];
+    RetweetId: number | null;
+    Retweet: Post | null;
+
 }
+
+export interface Comment {
+    id: number;
+    PostId: number;
+    content: string;
+    createdAt: string;
+    updatedAt: string;
+    User: Partial<User>;
+}
+
+export interface Image { // addPost
+    id: number;
+    src: string;
+    alt: string;
+    createdAt: string;
+    updatedAt: string;
+    PostId: number;
+}
+
+// uploadImages 하고 나서 res로 받는 { src: string; }객체 -> file = null
+
+export interface ImagePath {
+    src: string;
+    file: File | null;
+}
+
+// 참고: uploadImages 하기 전에 req로 Fil만 back에 줄 때 = File 객체를 씀
+// ->ImagePath 라는 interface 자체를 쓰지 않음.
 
 export interface Liker {
     id: number;
@@ -56,23 +104,4 @@ export interface Like {
     PostId: number;
     createdAt: string;
     updatedAt: string;
-}
-
-export interface Comment {
-    id: number;
-    postId: number;
-    content: string;
-    createdAt: string;
-    updatedAt: string;
-    User: Partial<User>;
-}
-
-export interface Image {
-    src: string;
-    alt: string;
-}
-
-export interface ImagePath {
-    src: string;
-    file: File | null;
 }

@@ -1,6 +1,12 @@
 import { Post } from './post';
 
 export default interface UserState {
+  loadMyInfoLoading: boolean;
+  loadMyInfoDone: boolean;
+  loadMyInfoError: string | null;
+  loadSingleUserLoading: boolean;
+  loadSingleUserDone: boolean;
+  loadSingleUserError: string | null;
   logInLoading: boolean;
   logInDone: boolean;
   logInError: string | null;
@@ -10,17 +16,27 @@ export default interface UserState {
   signUpLoading: boolean;
   signUpDone: boolean;
   signUpError: string | null;
+  changeUsernameLoading: boolean;
+  changeUsernameDone: boolean;
+  changeUsernameError: string | null;
+  loadFollowingsLoading: boolean;
+  loadFollowingsDone: boolean;
+  loadFollowingsError: string | null;
   followLoading: boolean;
   followDone: boolean;
   followError: string | null;
   unfollowLoading: boolean;
   unfollowDone: boolean;
   unfollowError: string | null;
-  changeUsernameLoading: boolean;
-  changeUsernameDone: boolean;
-  changeUsernameError: string | null;
+  loadFollowersLoading: boolean;
+  loadFollowersDone: boolean;
+  loadFollowersError: string | null;
+  removeFollowerLoading: boolean;
+  removeFollowerDone: boolean;
+  removeFollowerError: string | null;
   profileMenu: number;
   my: User | null; // my can be null when user is not logged in
+  singleUser: User | null;
   User: User[];
 }
 
