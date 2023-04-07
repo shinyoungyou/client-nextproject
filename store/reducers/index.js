@@ -8,13 +8,12 @@ const rootReducer = (state, action) => {
   switch (action.type) {
     case HYDRATE:
       return action.payload;
-    default: {
+    default:
       const combinedReducer = combineReducers({
         user: userSlice.reducer,
         post: postSlice.reducer,
       });
       return combinedReducer(state, action);
-    }
   }
 };
 

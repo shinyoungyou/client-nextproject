@@ -1,7 +1,6 @@
 import type { NextPage } from 'next';
 import { ElementType } from 'react';
 import Head from "next/head";
-
 import wrapper from '../store';
 
 interface AppProps {
