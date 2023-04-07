@@ -4,6 +4,7 @@ import React, { useState, useEffect, MouseEvent, BaseSyntheticEvent } from 'reac
 import Link from "next/link";
 import RootState from "../store/state-types";
 import { Post } from '../store/state-types/post';
+import moment from 'moment';
 
 import MoreMenu from "./MoreMenu";
 import RetweetMenu from "./RetweetMenu";
@@ -34,13 +35,14 @@ import ModeCommentOutlinedIcon from '@mui/icons-material/ModeCommentOutlined';
 
 interface PostCardProps {
   post: Post;
+  posts: Post[];
   retweetingPostId: number | null;
 }
 
 
-const PostCard: React.FC<PostCardProps> = ({ post, retweetingPostId }) => {
+const PostCard: React.FC<PostCardProps> = ({ post, posts, retweetingPostId }) => {
   const my = useSelector((state: RootState) => state.user.my);
-  const { mainPosts, editPostDone, editPostLoading, removePostLoading } = useSelector((state: RootState) => state.post);
+  const { editPostDone, editPostLoading, removePostLoading } = useSelector((state: RootState) => state.post);
   const dispatch = useDispatch();
 
   const [editStatus, setEditStatus] = useState("beforeEdit");
@@ -48,9 +50,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, retweetingPostId }) => {
 
   const [expanded, setExpanded] = useState(false);
 
-  const retweetingPost = mainPosts.find((retweetingPost)=> retweetingPost.id == retweetingPostId);
-  const retweetedTimes = mainPosts.filter((retweetingPost)=> retweetingPost.RetweetId == post.id).length;
-  const isRetweetedByMe = post.RetweetId && post.UserId == my?.id || mainPosts.find(mainPost => post.id == mainPost.RetweetId && mainPost.UserId == my?.id);
+  const retweetingPost = posts.find((retweetingPost)=> retweetingPost.id == retweetingPostId);
+  const retweetedTimes = posts.filter((retweetingPost)=> retweetingPost.RetweetId == post.id).length;
+  const isRetweetedByMe = post.RetweetId && post.UserId == my?.id || posts.find(mainPost => post.id == mainPost.RetweetId && mainPost.UserId == my?.id);
 
   useEffect(()=>{
     if(editPostDone){
@@ -95,17 +97,16 @@ const PostCard: React.FC<PostCardProps> = ({ post, retweetingPostId }) => {
 
   const isLiked = post.Likers?.find((like) => like.id == my?.id);
   const handleLikeButton = (post: Post) => {
-    if(!my) return alert('로그인이 필요합니다.');
+    if(my === null) return alert('로그인이 필요합니다.');
     if(isLiked){
       dispatch(unlikePost({ postId: post.id }));
     } else {
       dispatch(likePost({ postId: post.id }));
-
     }
   }
 
   return (<Card sx={{m: 1, mb: 3}}>
-    {retweetingPostId && <Link href="/"><a><RepeatIcon/>{retweetingPost?.User.username == my?.username ? "You" : retweetingPost?.User.username} Retweeted</a></Link>}
+    {retweetingPostId && <Link href={`/user/${retweetingPost?.User.id}`}><a style={{ display: 'flex', alignItems: 'center', color: 'inherit', textDecoration: 'none' }}><RepeatIcon/>{retweetingPost?.User.username === my?.username ? "You" : retweetingPost?.User.username} Retweeted</a></Link>}
     <CardHeader
         avatar={
           <Avatar
@@ -114,7 +115,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, retweetingPostId }) => {
               sx={{ bgcolor: blue[500] }}
           />
         }
-        action={my && <>
+        action={my !== null && <>
           <Tooltip title="More">
             <IconButton
                 aria-label="more"
@@ -141,8 +142,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, retweetingPostId }) => {
           />
         </>
         }
-        title={post.User.username}
-        subheader={post.createdAt === post.updatedAt ? post.createdAt : `Edited · ${post.updatedAt}`}
+        title={<Link href={`/user/${post.UserId}`}><a style={{ color: 'inherit', textDecoration: 'none' }}>{post.User.username}</a></Link>}
+        subheader={post.createdAt === post.updatedAt ? moment(post.createdAt).startOf('day').fromNow() : `Edited · ${moment(post.updatedAt).startOf('day').fromNow()}`}
     />
     {post.Images?.length > 0 && post.Images.length < 5 && <PostImages images={post.Images}/>}
     <CardContent>
@@ -196,7 +197,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, retweetingPostId }) => {
       </Tooltip>
     </CardActions>
     <Collapse in={expanded} timeout="auto" unmountOnExit>
-      {my && <CommentForm post={post}/>}
+      {my !== null && <CommentForm post={post}/>}
       <List
           subheader={<ListSubheader>{post.Comments ? post.Comments.length : 0}개의 댓글</ListSubheader>}
           sx={{m: 1, bgcolor: 'background.paper'}}
