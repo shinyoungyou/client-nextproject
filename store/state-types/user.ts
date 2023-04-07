@@ -1,6 +1,12 @@
 import { Post } from './post';
 
 export default interface UserState {
+  loadMyInfoLoading: boolean;
+  loadMyInfoDone: boolean;
+  loadMyInfoError: string | null;
+  loadSingleUserLoading: boolean;
+  loadSingleUserDone: boolean;
+  loadSingleUserError: string | null;
   logInLoading: boolean;
   logInDone: boolean;
   logInError: string | null;
@@ -28,9 +34,9 @@ export default interface UserState {
   removeFollowerLoading: boolean;
   removeFollowerDone: boolean;
   removeFollowerError: string | null;
-
   profileMenu: number;
   my: User | null; // my can be null when user is not logged in
+  singleUser: User | null;
   User: User[];
 }
 

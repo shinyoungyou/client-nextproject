@@ -5,12 +5,19 @@ export default interface PostState {
     loadPostsLoading: boolean;
     loadPostsDone: boolean;
     loadPostsError: string | null;
+    bringMorePostsByUser: boolean;
+    loadPostsByUserLoading: boolean;
+    loadPostsByUserDone: boolean;
+    loadPostsByUserError: string | null;
     uploadImagesLoading: boolean;
     uploadImagesDone: boolean;
     uploadImagesError: string | null;
     addPostLoading: boolean;
     addPostDone: boolean;
     addPostError: string | null;
+    loadSinglePostLoading: boolean;
+    loadSinglePostDone: boolean;
+    loadSinglePostError: string | null;
     editPostLoading: boolean;
     editPostDone: boolean;
     editPostError: string | null;
@@ -39,6 +46,8 @@ export default interface PostState {
     undoRetweetDone: boolean;
     undoRetweetError: string | null;
     mainPosts: Post[];
+    postsByUser: Post[] | null;
+    singlePost: Post | null;
     imagePaths: ImagePath[];
 }
 
