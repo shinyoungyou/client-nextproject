@@ -1,23 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { HYDRATE } from "next-redux-wrapper";
 import {
-  loadMyInfo,
-  logIn,
-  logOut,
-  signUp,
-  follow,
-  unfollow,
+  loadMyInfo, loadSingleUser, 
+  signUp, logIn, logOut,
   changeUsername,
-  loadFollowings,
+  follow, unfollow, loadFollowings,
   loadFollowers, removeFollower
 } from "../thunks/user";
 
 const userSlice = createSlice({
   name: 'user',
   initialState: {
-    loadMyInfoLoading: true,
+    loadMyInfoLoading: false,
     loadMyInfoDone: false,
     loadMyInfoError: null,
+    loadSingleUserLoading: false,
+    loadSingleUserDone: false,
+    loadSingleUserError: null,
     logInLoading: false,
     logInDone: false,
     logInError: null,
@@ -47,6 +46,7 @@ const userSlice = createSlice({
     removeFollowerError: null,
     profileMenu: 0,
     my: null,
+    singleUser: null,
     User: []
   },
   reducers: {
@@ -80,6 +80,20 @@ const userSlice = createSlice({
     builder.addCase(loadMyInfo.rejected, (state, action)=>{
       state.loadMyInfoLoading = false;
       state.loadMyInfoError = action.payload;
+    })
+    builder.addCase(loadSingleUser.pending, (state, action)=>{
+      state.loadSingleUserLoading = true;
+      state.loadSingleUserDone = false;
+      state.loadSingleUserError = null;
+    })
+    builder.addCase(loadSingleUser.fulfilled, (state, action)=>{
+      state.loadSingleUserLoading = false;
+      state.singleUser = action.payload;
+      state.loadSingleUserDone = true;
+    })
+    builder.addCase(loadSingleUser.rejected, (state, action)=>{
+      state.loadSingleUserLoading = false;
+      state.loadSingleUserError = action.payload;
     })
     builder.addCase(logIn.pending, (state, action)=>{
       state.logInLoading = true;
@@ -122,7 +136,6 @@ const userSlice = createSlice({
       state.signUpLoading = false;
       state.signUpError = action.payload;
     })
-
     builder.addCase(changeUsername.pending, (state, action)=>{
       state.changeUsernameLoading = true;
       state.changeUsernameDone = false;
