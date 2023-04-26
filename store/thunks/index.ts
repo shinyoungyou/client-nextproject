@@ -1,7 +1,8 @@
 import axios from "axios";
+import { backUrl } from "../../config/config";
 
 const instance = axios.create({
-  baseURL: `http://localhost:3065`, // cors
+  baseURL: backUrl, // cors
   withCredentials: true, // cookie (user info)
 });
 // instance.interceptors.request.use(function (instance) {
