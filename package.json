@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "next -p 3060",
-    "build": "cross-env NODE_ENV=production ANALYZE=true next --max_old_space_size=8192 build",
+    "build": "cross-env NODE_ENV=production ANALYZE=true next build",
     "start": "cross-env NODE_ENV=production next start -p 80"
   },
   "repository": {
