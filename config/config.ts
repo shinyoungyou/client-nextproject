@@ -1,1 +1,1 @@
-export const backUrl = process.env.NODE_ENV === 'production' ? 'http://54.176.45.190' : 'http://localhost:3065';
+export const backUrl = process.env.NODE_ENV === 'production' ? 'http://api.shinyoungyou.com' : 'http://localhost:3065';
