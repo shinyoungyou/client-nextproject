@@ -98,7 +98,7 @@ module.exports =
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return backUrl; });
-const backUrl = true ? 'http://54.176.45.190' : undefined;
+const backUrl = true ? 'http://api.shinyoungyou.com' : undefined;
 
 /***/ }),
 
