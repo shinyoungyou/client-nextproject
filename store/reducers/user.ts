@@ -61,12 +61,12 @@ const userSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    // builder.addCase(HYDRATE, (state, action) => {
-    //   return {
-    //     ...state,
-    //     ...action.payload.user,
-    //   }
-    // })
+    builder.addCase([HYDRATE], (state, action) => {
+      return {
+        ...state,
+        ...action.payload.user,
+      }
+    })
     builder.addCase(loadMyInfo.pending, (state, action)=>{
       state.loadMyInfoLoading = true;
       state.loadMyInfoDone = false;

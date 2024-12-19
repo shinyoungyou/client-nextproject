@@ -61,12 +61,12 @@ const postSlice = createSlice({
     imagePaths: []
   },
   extraReducers(builder) {
-    // builder.addCase(HYDRATE, (state, action) => {
-    //   return {
-    //     ...state,
-    //     ...action.payload.post,
-    //   }
-    // })
+    builder.addCase([HYDRATE], (state, action) => {
+      return {
+        ...state,
+        ...action.payload.post,
+      }
+    })
     builder.addCase(loadPosts.pending, (state, action) => {
       state.loadPostsLoading = true;
       state.loadPostsDone = false;
